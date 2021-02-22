@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
+//importar componentes
+import Login from './pages/Login'
 //exportar cosas de bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Button, Card, Form, Navbar} from 'react-bootstrap'
@@ -21,9 +23,7 @@ function App() {
         </Navbar.Brand>
       </Navbar>
       <header className="App-header">
-
-
-
+      
       <h1>UGRAM</h1>
       <h3>Practica 1 - Seminario de Sistemas 1</h3>
       <Form>
