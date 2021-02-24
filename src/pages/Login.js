@@ -1,36 +1,27 @@
 import React, { Component } from 'react';
 import user1 from '../img/user.png';
-import {Form, Button} from 'react-bootstrap';
+import {Form, Button, FormGroup} from 'react-bootstrap';
 import '../css/Login.css'
+import Menu from '../components/Menu'
+import FormLogin from '../components/FormLogin';
 
 export default class Login extends Component {
+    state={ email: '', password: ''};
+
+    handleClick(e){
+        //primero evitamos que el boton recargue
+        e.preventDefault()
+        const correo = document.getElementById('correoU').value
+        const contra = document.getElementById('passU').value
+        this.setState={ email: correo, password: contra}
+    }
+
     render() {
         return (
-            <div class="modal-dialog text-center">
-                <div class="col-sm-8 cuadro-central">
-                    <div class="modal-content">
-                        <div class="col-12 user-img">
-                            <img src={user1}></img>
-                        </div>
-
-                        <Form>
-                        <Form.Group controlId="formBasicEmail">
-                            <Form.Control type="email" placeholder="E-mail" />
-                        </Form.Group>
-
-                        <Form.Group controlId="formBasicPassword">
-                            <Form.Control type="password" placeholder="Password" />
-                        </Form.Group>
-
-                        <Form.Group controlId="formBasicCheckbox">
-                        </Form.Group>
-                        <Button variant="outline-dark" type="submit">
-                            Ingresar
-                        </Button>
-                        </Form>
-                    </div>
-                </div>
-            </div>
+            <>
+            <Menu />
+            <FormLogin />
+            </>
         )
     }
 }
