@@ -94,6 +94,8 @@ app.get("/todos", function(req, res){
   });
 });
 
+
+//este no se toca.
 app.post("/login2", function(req, res){
   let body = req.body;
   let usuario = body.userName;
@@ -121,6 +123,38 @@ app.post("/login2", function(req, res){
           console.log(data);
         }
 
+      }
+  });
+});
+
+
+//este no se toca..
+app.put("/editarUsuario", function(req, res){
+  let body = req.body;
+  let usuario = body.userName;
+  let nombre = body.nombre;
+  let apellido = body.apellido;
+
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var params = {
+    TableName: 'Usuarios',
+    Key: {
+      'userName': usuario
+    },
+    UpdateExpression: "set nombre= :nom, apellido= :las",
+    ExpressionAttributeValues:{
+      ":nom": nombre,
+      ":las": apellido
+    },
+    ReturnValues: "UPDATED_NEW"
+  };
+
+  docClient.update(params, function (err, data) {
+      if (err) {
+          res.send("Nel");
+      } else {
+          res.send(data);
       }
   });
 });

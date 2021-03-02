@@ -4,6 +4,7 @@ import axios from 'axios';
 import request from 'superagent';
 import md5 from 'md5';
 import Cookies from 'universal-cookie';
+import swal from 'sweetalert';
 
 const Surl ="http://localhost:9000/login2";
 const cookiess = new Cookies();
@@ -47,14 +48,24 @@ export default class FormLogin extends Component {
         .then(response=>{
             if(response.data == "vacio"){
                 console.log("vacio")
-                alert("El usuario no existe.");
+                swal({
+                    title: "Error",
+                    text: "El usuario no existe.",
+                    icon: "info",
+                    button: "Aceptar",
+                });
             }else{
                 //SI retorna un usuario entonces verificamos la contraseña.
                 //mostramos el usuario que devuelve
                 let cEntra = response.data.Item.contra;
                 let contraL = md5(this.state.contra);
                 if(cEntra != contraL){
-                    alert("El usuario y/o la contraseña son incorrectos.");
+                    swal({
+                        title: "Error",
+                        text: "Usuario/Contraseña incorrectos.",
+                        icon: "error",
+                        button: "Aceptar"
+                    });
                 }else{
                     console.log("Credenciales correctas.");
                     console.log(response.data.Item);
@@ -64,8 +75,15 @@ export default class FormLogin extends Component {
                     cookiess.set('nombre', usuario.nombre, {path: "/"});
                     cookiess.set('apellido', usuario.apellido, {path: "/"});
                     cookiess.set('contra', usuario.contra, {path: "/"});
-                    alert(`Bienvenido ${usuario.nombre} de nuevo.`);
-                    window.location.href="./profile"
+                    swal({
+                        title: "Bienvenid@",
+                        text: ":) Credenciales correctas.",
+                        icon: "success",
+                        button: "Aceptar"
+                    });
+                    setTimeout("location.href='./profile'", 2000);
+                    //alert(`Bienvenido ${usuario.nombre} de nuevo.`);
+                    //window.location.href="./profile"
 
                 }
             }
