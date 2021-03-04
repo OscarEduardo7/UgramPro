@@ -4,6 +4,8 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import Login from '../pages/Login'
 import Consumiendo from '../components/ConsumiendoGet'
 import Profile from '../pages/Profile';
+import Registo from '../pages/Registro';
+import UploadPhoto from '../pages/UploadPhoto';
 
 
 //rutas creadas LOGIN
@@ -15,6 +17,8 @@ function Routes(){
                 <Route exact path="/" component={Login}/>
                 <Route exact path="/profile" component={Profile}/>
                 <Route exact path="/prueba" component={Consumiendo}/>
+                <Route exact path="/register" component={Registo}/>
+                <Route exact path="/upload" component={UploadPhoto}/>
             </Switch>
         </BrowserRouter>
     );

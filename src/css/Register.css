@@ -1,0 +1,62 @@
+.user-img{
+    margin-top: -75px;
+    margin-bottom: 25px;
+}
+
+.user-img img{
+    width: 200px;
+    height: 200px;
+    box-shadow: 0px 0px 5px rgb(59, 59, 59);
+    border-radius: 50%;
+}
+
+.modal-content{
+    padding: 0px 25px;
+    box-shadow: 0px 0px 5px rgb(57, 57, 58);
+}
+.cuadro-central{
+    margin:0 auto;
+    margin-top: 25%;
+    padding: 0;
+}
+
+label#texto{
+    text-align: center;
+    color: white;
+}
+
+div#div_file{
+    margin-left: 60px;
+    position: relative;
+    padding: 5px;
+    width: 155px;
+    background-color: #2499e3;
+    -webkit-border-radius:5px;
+    -o-border-radius:5px;
+    -moz-border-radius:5px;
+    -ms-border-radius:5px;
+    -webkit-box-shadow:0px 3px 0px #1a71a9;
+}
+
+input#Photo{
+    position: absolute;
+    top:0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+.user-img-def{
+    width: 100px;
+    height: 100px;
+
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
