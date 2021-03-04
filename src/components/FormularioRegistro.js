@@ -4,7 +4,7 @@ import axios from 'axios';
 import md5 from 'md5';
 import user from '../img/user.png';
 
-const url = '';
+const url = "http://localhost:9000/register";
 const cookies = new Cookies();
 let enBase64 = '';
 let imagen = user;
@@ -28,6 +28,7 @@ export default class FormularioRegistro extends Component{
         if(this.state.userName != '' && this.state.name != ''  && this.state.lastName != '' && this.state.contra != '' && this.state.contra2 != '' && this.state.foto != ''){
             if(this.state.contra == this.state.contra2){
                 //guardar foto
+                //this.state.foto = 'url'
                 this.Registrar();
             }else{
                 alert("La contraseña no coincide");
@@ -141,6 +142,7 @@ export default class FormularioRegistro extends Component{
         this.state.foto = enBase64;
         console.log(this.state.foto);
         console.log(this.state.userName);
+        this.Comprobacion();
         //<img src={`data:image/png;base64,${enBase64}`} />
         
         //<div className="user-img-def">

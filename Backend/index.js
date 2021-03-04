@@ -222,3 +222,90 @@ app.get("/usuario", function(req, res){
       });
     
 });
+
+//------Registrar usuario-------------
+app.post("/register", function(req, res){
+  let body = req.body;
+  let usuario = body.userName;
+  let nombre = body.nombre;
+  let apellido = body.apellido;
+  let contra = body.contra;
+  let foto = body.foto;
+
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var input = {
+    'userName': usuario,
+    'nombre': nombre,
+    'apellido': apellido,
+    'contra': contra//,
+    //'foto': foto
+  }
+
+  var params = {
+    TableName: 'Usuarios',
+    Item: input
+  };
+
+  docClient.put(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err);
+          console.log("user save error");
+      } else {
+        console.log("user save success");
+      }
+  });
+});
+
+//Albums por usuario
+app.get("/albumes", function(req, res){
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var params = {
+    TableName: 'Albumes',
+    Limit:10,
+    Key: {
+      "id": 2
+    },
+    //Item: {
+      //"idUser": "oscar1"
+    //}
+  };
+
+  console.log("pedir albumes");
+  docClient.scan(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err)
+      } else {
+          res.send(data);
+          console.log(data);
+      }
+  });
+});
+
+
+//Albums por usuario
+app.get("/albumes2", function(req, res){
+  let body = req.body;
+  let user = body.idUser;
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var params = {
+    TableName: 'Albumes',
+    FilterExpression: 'idUser = :n',
+    ExpressionAttributeValues: {':n':'oscar1'}
+  };
+
+  console.log("pedir albumes");
+  docClient.scan(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err)
+      } else {
+          res.send(data);
+          console.log(data);
+      }
+  });
+});
