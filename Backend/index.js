@@ -2,6 +2,7 @@ var att = require('dynamodb-data-types').AttributeValue;
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
+var uuid = require('uuid');
 const cors = require('cors');
 //para credenciales de AWS
 const aws_keys = require('./creeds');
@@ -74,26 +75,6 @@ app.get("/login", function(req, res){
   });
 });
 
-//peticion docClient
-app.get("/todos", function(req, res){
-  var docClient = new AWS.DynamoDB.DocumentClient();
-
-  var params = {
-    TableName: 'Usuarios',
-    Limit: 10
-  };
-
-  docClient.scan(params, function (err, data) {
-      if (err) {
-          res.send(err);
-          console.log(err)
-      } else {
-          res.send(data);
-          console.log(data);
-      }
-  });
-});
-
 
 //este no se toca.
 app.post("/login2", function(req, res){
@@ -155,6 +136,84 @@ app.put("/editarUsuario", function(req, res){
           res.send("Nel");
       } else {
           res.send(data);
+      }
+  });
+});
+
+//este no se toca...
+app.post("/getAlbumes", function(req, res){
+  let body = req.body;
+  let usuario = body.userName;
+
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var params = {
+    TableName: 'Albumes',
+    FilterExpression : 'idUser = :n',
+    ExpressionAttributeValues : {':n' : usuario}
+  };
+
+  docClient.scan(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err)
+      } else {
+          res.send(data);
+          //console.log(data);
+      }
+  });
+});
+
+//este no se toca---- CREAR ALBUM NUEVO -----
+app.post("/newAlbum", function(req, res){
+  let body = req.body;
+  let usuario = body.userName;
+  let titulo = body.titulo;
+
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var input ={
+    'id': usuario+"_"+titulo,
+    'idUser': usuario,
+    'titulo': titulo
+  }
+
+  var params = {
+    TableName: 'Albumes',
+    Item: input
+  };
+
+  docClient.put(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log("noCreado");
+      } else {
+          res.send("Creado");
+      }
+  });
+});
+
+//este no se toca---- ELIMINAR ALBUM -----
+app.post("/deleteAlbum", function(req, res){
+  let body = req.body;
+  let usuario = body.userName;
+  let titulo = body.titulo;
+
+  var docClient = new AWS.DynamoDB.DocumentClient();
+  var params = {
+    TableName: 'Albumes',
+    Key: {
+      "id": usuario+"_"+titulo
+    }
+  };
+
+  docClient.delete(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log("no se elimino");
+      } else {
+          res.send(data);
+          console.log("eliminado");
       }
   });
 });
