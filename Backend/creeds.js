@@ -1,8 +1,8 @@
 let aws_keys = {
     s3: {
         region: 'us-east-2',
-        accessKeyId: "",
-        secretAccessKey: "",
+        accessKeyId: 'AKIA3EBUF4FC4WB2TUVZ',
+        secretAccessKey: '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',
         //apiVersion: '2006-03-01',
     },
     dynamodb: {

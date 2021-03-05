@@ -43,11 +43,18 @@ export default class SubirFoto extends Component{
     }*/
 
     RecuperarAlbumes=async()=>{
-        axios.get(url,{userName: this.state.userName})
+        axios.post(url,{userName: this.state.userName})
         .then(response=>{
             console.log('respuesta');
             console.log(response.data);
-            this.state.albumes = (JSON.parse(response.text)).Items;
+            //this.state.albumes = (JSON.parse(response.text)).Items;
+            const alb = (response.data).Items;
+            console.log(alb);
+            this.setState({
+                albumes: alb
+            });
+            //this.state.albumes = alb;
+            console.log("albumes");
             console.log(this.state.albumes);
         })
         .catch(error=>{
@@ -56,7 +63,8 @@ export default class SubirFoto extends Component{
     }
 
     componentDidMount(){
-        request
+        this.RecuperarAlbumes();
+        /*request
             .get(url, {idUser: this.state.userName})//'http://localhost:9000/todos')
             .end((err, res) => {
                 console.log(JSON.parse(res.text))
@@ -67,11 +75,11 @@ export default class SubirFoto extends Component{
                     albumes: personasU
                 });
                 //this.Filtar(personasU);
-            });
+            });*/
     }
 
     render(){
-
+        
         /*var datos = this.state.albumes.map((p,i)=>{
             return <li key={i}>{p.titulo}</li>
         });
@@ -125,7 +133,7 @@ export default class SubirFoto extends Component{
                             <label htmlFor="alb" className="form-label">Album</label>
                             
                             
-                            <select class="form-control btn-info" id="seleccionado" name="seleccionado" onChange={this.handleChange}>
+                            <select className="form-control btn-info" id="seleccionado" name="seleccionado" onChange={this.handleChange}>
                                         <option>Album</option>
                                         {datos2}
                             </select>
@@ -155,11 +163,12 @@ export default class SubirFoto extends Component{
     handleChange=async e=>{
         e.persist();
         await this.setState({
-           // agregarA:{
-             //   ...this.state.agregarA,
-               // [e.taget.name]: e.target.value
-            //}
+            agregarA:{
+                ...this.state.agregarA,
+                [e.target.name]: e.target.value
+            }
         });
+        console.log("album seleccionado");
         console.log(this.state.agregarA.seleccionado);
     }
 }

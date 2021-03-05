@@ -3,11 +3,15 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import md5 from 'md5';
 import user from '../img/user.png';
+import swal from 'sweetalert';
 
 const url = "http://localhost:9000/register";
+const url2 = "http://localhost:9000/todos2";
+const url3 = "http://localhost:9000/subirFoto";
 const cookies = new Cookies();
 let enBase64 = '';
 let imagen = user;
+let ext = '';
 
 export default class FormularioRegistro extends Component{
 
@@ -20,7 +24,8 @@ export default class FormularioRegistro extends Component{
             lastName: '',
             contra: '',
             contra2: '',
-            foto: ""
+            foto: "",
+            usuarios: []
         }
     //}
 
@@ -31,34 +36,112 @@ export default class FormularioRegistro extends Component{
                 //this.state.foto = 'url'
                 this.Registrar();
             }else{
-                alert("La contraseña no coincide");
+                swal({
+                    title: "Error",
+                    text: "La contraseña no coincide",
+                    icon: "error",
+                    button: "Aceptar"
+                });
             }
         }else{
-            alert("Llenar todos los campos");
+            swal({
+                title: "Error",
+                text: "Llenar todos los campos",
+                icon: "error",
+                button: "Aceptar"
+            });
         }
     }
 
     Registrar=async()=>{
-        axios.post(url, {userName: this.state.userName, nombre: this.state.name, apellido: this.state.lastName, contra: md5(this.state.contra), foto: this.state.foto})
+        this.Usuarios();
+        let nuevo = this.state.userName;
+        let existe = 0;
+        for(let i=0; i < this.state.usuarios.length; i++){
+            let ver = this.state.usuarios[i].userName;
+            if(ver == nuevo){
+                existe = 1;
+                break;
+            }
+        }
+        console.log("va a registrar");
+        if(existe == 0){
+            console.log("no existe");
+            axios.post(url, {userName: this.state.userName, nombre: this.state.name, apellido: this.state.lastName, contra: md5(this.state.contra), foto: this.state.foto})
+            .then(response=>{
+                console.log('response');
+                console.log(response.data);
+                if(response.data == "error"){
+                    console.log("error al registrarse");
+                    swal({
+                        title: "Error",
+                        text: "Error al registrarse",
+                        icon: "error",
+                        button: "Aceptar"
+                    });
+                }else if(response.data == "success"){
+                    //guardar foto de perfil
+                    this.GuardarFoto();
+                    console.log("El usuario fue registrado");
+                    swal({
+                        title: "Registrado",
+                        text: "Registrado correctamente",
+                        icon: "success",
+                        button: "Aceptar"
+                    });
+                    //alert("El usuario fue registrado");
+                    //cookies
+                    /*var usuario = response.data.Item;
+                    cookies.set('userName', usuario.userName, {path: "/"});
+                    cookies.set('nombre', usuario.name, {path: "/"});
+                    cookies.set('apellido', usuario.lastName, {path: "/"});
+                    cookies.set('contra', usuario.contra, {path: "/"});
+                    alert(`Bienvenido ${usuario.name}.`);*/
+                    window.location.href="./"//"./profile"
+                }
+            })
+            .catch(error=>{
+                console.log("ERROR")
+            })
+        }else{
+            swal({
+                title: "Error",
+                text: "El nombre de usuario esta ocupado",
+                icon: "error",
+                button: "Aceptar"
+            });
+            console.log('el usuario ya existe');
+        }
+    }
+
+    Usuarios=async()=>{
+        axios.get(url2)
         .then(response=>{
-            if(response.data == "error"){
-                console.log("error al registrarse");
-                alert("No fue posible el registro");
+            console.log(response.data);
+            const users = (response.data).Items;
+            console.log(users);
+            this.setState({
+                usuarios: users
+            });
+            console.log(this.state.usuarios);
+        })
+        .catch(error=>{
+            console.log('error')
+        })
+    }
+
+    GuardarFoto=async()=>{
+        console.log('guardar foto');
+        axios.post(url3, {nombreImagen: 'perfil', imagenBase64: this.state.foto, extension: ext, userName: this.state.userName})
+        .then(response=>{
+            if (response.data == ""){
+                console.log('foto guardada');
             }else{
-                console.log("El usuario fue registrado");
-                alert("El usuario fue registrado");
-                //cookies
-                var usuario = response.data.Item;
-                cookies.set('userName', usuario.userName, {path: "/"});
-                cookies.set('nombre', usuario.name, {path: "/"});
-                cookies.set('apellido', usuario.lastName, {path: "/"});
-                cookies.set('contra', usuario.contra, {path: "/"});
-                alert(`Bienvenido ${usuario.name}.`);
-                window.location.href="./profile"
+                console.log('error al guardar la foto');
             }
         })
         .catch(error=>{
-            console.log("ERROR")
+            console.log("error")
         })
     }
 
@@ -82,6 +165,11 @@ export default class FormularioRegistro extends Component{
                     //this.setState({foto: aux[1]})
                     enBase64 = aux[1];
                     console.log(enBase64);
+                    var aux2, aux3 = [];
+                    aux2 =aux[0].split('/');
+                    aux3 = aux2[1].split(';');
+                    ext = aux3[0]
+                    console.log('la extension es: ' + ext);
                 }
             })
         }
@@ -140,9 +228,11 @@ export default class FormularioRegistro extends Component{
         e.preventDefault();
         console.log('oprimio registarse');
         this.state.foto = enBase64;
-        console.log(this.state.foto);
-        console.log(this.state.userName);
+        //console.log(this.state.foto);
+        //console.log(this.state.userName);
         this.Comprobacion();
+        console.log('registro')
+        //alert("registrando");
         //<img src={`data:image/png;base64,${enBase64}`} />
         
         //<div className="user-img-def">

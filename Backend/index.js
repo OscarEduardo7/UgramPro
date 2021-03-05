@@ -253,7 +253,11 @@ app.post("/register", function(req, res){
           console.log(err);
           console.log("user save error");
       } else {
+        res.send("success");
         console.log("user save success");
+        //console.log(res);
+        console.log(res.data);
+        console.log(usuario + " creado");
       }
   });
 });
@@ -287,15 +291,15 @@ app.get("/albumes", function(req, res){
 
 
 //Albums por usuario
-app.get("/albumes2", function(req, res){
+app.post("/albumes2", function(req, res){
   let body = req.body;
-  let user = body.idUser;
+  let user = body.userName;
   var docClient = new AWS.DynamoDB.DocumentClient();
 
   var params = {
     TableName: 'Albumes',
     FilterExpression: 'idUser = :n',
-    ExpressionAttributeValues: {':n':'oscar1'}
+    ExpressionAttributeValues: {':n':user}
   };
 
   console.log("pedir albumes");
@@ -309,3 +313,62 @@ app.get("/albumes2", function(req, res){
       }
   });
 });
+
+app.get("/todos2", function(req, res){
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var params = {
+    TableName: 'Usuarios',
+    Limit: 100
+  };
+
+  docClient.scan(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err)
+      } else {
+          res.send(data);
+          console.log(data);
+      }
+  });
+});
+
+
+//--------S3------------------
+app.post('/subirFoto', function(req, res){
+
+  console.log("subir foto");
+  var nombreFoto = req.body.nombreImagen;
+  var foto = req.body.imagenBase64;
+  var extension = req.body.extension;
+  var usuario = req.body.userName;
+
+  var nombre = 'Fotos_Perfil/' + usuario + '_' + nombreFoto + '.' + extension;
+
+  console.log(nombre);
+
+  //convertir base 64 a bytes
+  let buffer = new Buffer.from(foto, 'base64');
+
+  //-------------
+  /*AWS.config.update({
+    region: 'us-east-2',
+    accessKeyId: 'AKIA3EBUF4FC4WB2TUVZ',
+    secretAccessKey: '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'
+  })*/
+
+  var s3 = new AWS.S3();
+  const params = {
+    Bucket: "practica1-g25-imagenes",
+    Key: nombre,
+    Body: buffer,
+    ContentType: 'image',
+    ACL: 'public-read'
+  };
+
+  const putResult = s3.putObject(params).promise();
+  res.json({mensaje: putResult})
+  //mensaje vacio es que si ingreso
+  console.log(putResult);
+
+})
