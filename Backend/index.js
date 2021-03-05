@@ -563,3 +563,76 @@ app.post("/guardarFotos", function(req, res){
       }
   });
 });
+
+//-------Mostrar Fotos------------
+//recuperar todas las fotos de perfil por usuario
+app.post("/fotosPerfilUsuario", function(req, res){
+  let body = req.body;
+  let user = body.userName;
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var params = {
+    TableName: 'FotosPerfil',
+    FilterExpression: 'idUser = :n',
+    ExpressionAttributeValues: {':n':user}
+  };
+
+  console.log("pedir fotos de perfil");
+  docClient.scan(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err)
+      } else {
+          res.send(data);
+          console.log(data);
+      }
+  });
+});
+
+//recuperar todas las fotos subidas por usuario
+app.post("/fotosPublicadasUsuario", function(req, res){
+  let body = req.body;
+  let user = body.userName;
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var params = {
+    TableName: 'FotosPublicadas',
+    FilterExpression: 'usuario = :n',
+    ExpressionAttributeValues: {':n':user}
+  };
+
+  console.log("pedir fotos publicadas por " + user);
+  docClient.scan(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err)
+      } else {
+          res.send(data);
+          console.log(data);
+      }
+  });
+});
+
+//recuperar usuario
+app.post("/usuarioId", function(req, res){
+  let body = req.body;
+  let user = body.userName;
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var params = {
+    TableName: 'Usuarios',
+    FilterExpression: 'userName = :n',
+    ExpressionAttributeValues: {':n':user}
+  };
+
+  console.log("informacion de " + user);
+  docClient.scan(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err)
+      } else {
+          res.send(data);
+          console.log(data);
+      }
+  });
+});
