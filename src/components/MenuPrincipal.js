@@ -43,7 +43,7 @@ export default class MenuPrincipal extends Component {
                 Ver fotos
             </a>
             <a className="dropdown-item" href="#">
-                Editar Perfil
+                Subir fotos
             </a>
             <a className="dropdown-item" href="#" onClick={()=>this.CerrarSesion()}>
                 Cerrar Sesion

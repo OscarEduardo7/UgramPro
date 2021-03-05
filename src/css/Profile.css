@@ -83,6 +83,10 @@ h1{
     background-color: #DDF58C;
 }
 
+.inBlanco{
+    color: white;
+}
+
 .elemento {
     background-color: #67C3E6;
     width: 100px;

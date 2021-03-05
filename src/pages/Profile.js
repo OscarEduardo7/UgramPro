@@ -11,19 +11,30 @@ import { timers } from 'jquery';
 
 const cookiess = new Cookies();
 const Surl = "http://localhost:9000/editarUsuario";
+const Aurl = "http://localhost:9000/getAlbumes";
+const Curl = "http://localhost:9000/newAlbum";
+const Eurl = "http://localhost:9000/deleteAlbum";
 
 export default class Profile extends Component {
     
     state={
         data:[],
         modalEditar: false,
+        modalAlbum: false,
         form:{
             userName: '',
             nombre: '',
             apellido: '',
             contra: ''
-        }
-    }
+        },
+        eliminar:{
+            seleccionado: '',
+        },
+        album:{
+        crearAlbum: '',
+        },
+        Albumes: []
+    };
 
     handleChange=async e=>{
         e.persist();
@@ -36,14 +47,44 @@ export default class Profile extends Component {
         //console.log(this.state.form);
     }
 
+    handleChange2=async e=>{
+        e.persist();
+        await this.setState({
+            album:{
+                ...this.state.album,
+                [e.target.name]: e.target.value
+            }
+        });
+        console.log(this.state.album);
+    }
+
+    handleChange3=async e=>{
+        e.persist();
+        await this.setState({
+            eliminar:{
+                ...this.state.seleccionado,
+                [e.target.name]: e.target.value
+            }
+        });
+        console.log(this.state.eliminar.seleccionado);
+    }
+
+
     modaEditarEstado=()=>{
         this.setState({modalEditar: !this.state.modalEditar})
     }
+
+    modaEditarAlbum=()=>{
+        this.setState({modalAlbum: !this.state.modalAlbum})
+    }
+
     componentDidMount(){
         if(!cookiess.get('userName')){
             window.location.href='./';
         }
+        this.ObtenerAlbum();
     }
+
 
     //EDITAR PERFIL
     EditarPerfil=async()=>{
@@ -98,11 +139,90 @@ export default class Profile extends Component {
         }
     }
 
+    //para editar albumes
+    ObtenerAlbum=async()=>{
+        axios.post(Aurl,{userName: cookiess.get("userName")})
+        .then(response=>{
+            if(response.data.Count == 0){
+                console.log("NO HAY ALBUMES PARA ESTE USUARIO")
+            }else{
+                this.setState({
+                    Albumes: response.data.Items
+                });
+                console.log("mis albumes:")
+                console.log(this.state.Albumes);                
+            }
+        })
+        .catch(error=>{
+            console.error(error);
+        });
+    }
+
+    //para crear albumes
+    CrearAlbum=async()=>{
+        let nuevo = this.state.album.crearAlbum;
+        let existe = "no";
+        for(let i = 0; i < this.state.Albumes.length; i++){
+            let v = this.state.Albumes[i].titulo;
+            if(v == nuevo){
+                existe = "si";
+                break;
+            }
+        }
+
+        if("no" == existe){
+            axios.post(Curl,{userName: cookiess.get("userName"), titulo: this.state.album.crearAlbum})
+            .then(response=>{
+                swal({
+                    title: "Creado",
+                    text: "El album ha sido creado.",
+                    icon: "success",
+                    button: "Aceptar",
+                    timer: "2000"
+                });
+                setTimeout('document.location.reload()',1000);
+            })
+            .catch(error=>{
+                console.error(error);
+            });
+        }else{
+            swal({
+                title: "Error",
+                text: "El album ya existe.",
+                icon: "error",
+                button: "Aceptar",
+            });
+        }
+    }
+
+    //para eliminar albumes
+    EliminarAlbum=async()=>{
+        axios.post(Eurl,{userName: cookiess.get("userName"), titulo: this.state.eliminar.seleccionado})
+        .then(response=>{
+            swal({
+                title: "Eliminado",
+                text: "El album ha sido eliminado.",
+                icon: "success",
+                button: "Aceptar",
+                timer: "2000"
+            });
+            setTimeout('document.location.reload()',1000);
+        })
+        .catch(error=>{
+            console.error(error);
+        });
+    }
+
 
     render() {
         let usuario = cookiess.get("userName");
         let nombre = cookiess.get("nombre");
         let apellido = cookiess.get("apellido");
+
+        
+        var albumesPerfil = this.state.Albumes.map((a,i) =>{
+            return <option key={i} value={a.titulo}>{ a.titulo }</option>
+        });
 
         return (
             <div>
@@ -126,27 +246,26 @@ export default class Profile extends Component {
                     <div className="salto"></div>
                     <div className="row justify-content-md-center">
                         <div className="col-lg-3">
-                        <button type="button" class="btn btn-info btn-lg btni">Ver fotos</button>
+                        <button type="sumit" className="btn btn-info btn-lg btni">Ver fotos</button>
                         </div>
                         <div className="col-md-auto">
-                        <button type="button" class="btn btn-info btn-lg btni">Editar Albumes</button>
+                        <button type="button" className="btn btn-info btn-lg btni" onClick={()=>this.modaEditarAlbum()}>Editar Albumes</button>
                         </div>
                         <div className="col-md-auto">
-                        <button type="button" class="btn btn-info btn-lg btni" onClick={()=>this.modaEditarEstado()}>Editar Perfil</button>
+                        <button type="button" className="btn btn-info btn-lg btni" onClick={()=>this.modaEditarEstado()}>Editar Perfil</button>
                         </div>
                         <div className="col-lg-3">
-                        <button type="button" class="btn btn-info btn-lg btni">Subir Fotos</button>
+                        <button type="button" className="btn btn-info btn-lg btni">Subir Fotos</button>
                         </div>
                     </div>
-                    <div class="salto"></div>
+                    <div className="salto"></div>
                 </div>
-                <div class="salto"></div>
+                <div className="salto"></div>
                 </div>
 
                 <Modal isOpen={this.state.modalEditar}>
-                    <ModalTitle>Editar Perfil</ModalTitle>
-                    <ModalHeader style={{display: 'block'}}>
-                        
+                    <ModalHeader toggle={this.modaEditarEstado} style={{display: ''}}>
+                    Editar Perfil
                     </ModalHeader>
                     <ModalBody>
                         <div className="container">
@@ -187,6 +306,59 @@ export default class Profile extends Component {
                             Guardar Cambios
                         </button>
                         <button className="btn btn-dark" onClick={()=>this.modaEditarEstado()}>
+                        Cancelar
+                        </button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={this.state.modalAlbum}>
+                    <ModalHeader toggle={this.modaEditarAlbum} style={{display: ''}}> 
+                    Editar Albumes
+                    </ModalHeader>
+                    <ModalBody>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-8">
+                                    <div className="form-group">
+                                        <label htmlFor="userName">Eliminar album</label>
+                                        <select className="form-control btn-info" name="seleccionado" id="seleccionado" onChange={this.handleChange3}>
+                                            { albumesPerfil }                                            
+                                        </select>
+                                        <br></br>
+                                    </div>
+                                </div>
+                                <div className="col-4">
+                                    <label className="inBlanco">Eliminar</label>
+                                    <button className="btn btn-dark" onClick={this.EliminarAlbum}>
+                                    Eliminar
+                                    </button>
+                                    <br></br>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="salot"></div>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-8">
+                                    <div className="form-group">
+                                        <label htmlFor="userName">Nuevo album</label>
+                                        <input className="form-control" type="text" name="crearAlbum" id="album" onChange={this.handleChange2}/>
+                                        <br></br>
+                                    </div>
+                                </div>
+                                <div className="col-4">
+                                <label className="inBlanco">Crear Album</label>
+                                <button className="btn btn-info" onClick={this.CrearAlbum}>
+                                    Crear
+                                    </button>
+                                    <br></br>
+                                </div>
+                            </div>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <button className="btn btn-dark" onClick={()=>this.modaEditarAlbum()}>
                         Cancelar
                         </button>
                     </ModalFooter>
