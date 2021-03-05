@@ -89,7 +89,14 @@ export default class FormLogin extends Component {
             }
         })
         .catch(error=>{
-            console.error("error")
+            console.error(error)
+            swal({
+                title: "Ocurrio algo",
+                text: "No existe el usuario.",
+                icon: "error",
+                button: "Aceptar"
+            });
+            setTimeout("location.href='./'", 2000);
         })
     }
 
@@ -128,6 +135,7 @@ export default class FormLogin extends Component {
                         </div>
                         <button type="submit" className="btn btn-dark">Iniciar Sesión</button>
                         </form>
+                        <a href="/register">Registrate ahora</a>
                     <div>
                         <br></br>
                     </div>

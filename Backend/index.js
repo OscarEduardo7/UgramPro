@@ -25,7 +25,7 @@ var AWS = require('aws-sdk');
 AWS.config.update(aws_keys.dynamodb);
 //instanciamos los servicios que vamos a utilizar
 const Dynamo = new AWS.DynamoDB(aws_keys.dynamodb);
-
+const s3 = new AWS.S3(aws_keys.s3);
 //peticion ejemplo
 app.get("/", function(req, res){
     res.json({ mensaje: "HOLA MUNDO"});
@@ -76,7 +76,7 @@ app.get("/login", function(req, res){
 });
 
 
-//este no se toca.
+//este no se toca. - obtener usuario para login
 app.post("/login2", function(req, res){
   let body = req.body;
   let usuario = body.userName;
@@ -109,7 +109,7 @@ app.post("/login2", function(req, res){
 });
 
 
-//este no se toca..
+//este no se toca.. / actualizar usuario
 app.put("/editarUsuario", function(req, res){
   let body = req.body;
   let usuario = body.userName;
@@ -140,7 +140,7 @@ app.put("/editarUsuario", function(req, res){
   });
 });
 
-//este no se toca...
+//este no se toca... / obtener Albumes de un usuario especifico
 app.post("/getAlbumes", function(req, res){
   let body = req.body;
   let usuario = body.userName;
@@ -416,7 +416,7 @@ app.post('/subirFoto', function(req, res){
     secretAccessKey: 'iiDz5x8Bbz6zGL5Ay24oNcYJ36srqUZMgLEB94JT'
   })*/
 
-  var s3 = new AWS.S3();
+
   const params = {
     Bucket: "practica1-g25-imagenes",
     Key: nombre,
