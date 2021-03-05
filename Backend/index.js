@@ -25,7 +25,7 @@ var AWS = require('aws-sdk');
 AWS.config.update(aws_keys.dynamodb);
 //instanciamos los servicios que vamos a utilizar
 const Dynamo = new AWS.DynamoDB(aws_keys.dynamodb);
-
+const s3 = new AWS.S3(aws_keys.s3);
 //peticion ejemplo
 app.get("/", function(req, res){
     res.json({ mensaje: "HOLA MUNDO"});
@@ -297,8 +297,8 @@ app.post("/register", function(req, res){
     'userName': usuario,
     'nombre': nombre,
     'apellido': apellido,
-    'contra': contra//,
-    //'foto': foto
+    'contra': contra,
+    'foto': foto
   }
 
   var params = {
@@ -416,7 +416,7 @@ app.post('/subirFoto', function(req, res){
     secretAccessKey: 'iiDz5x8Bbz6zGL5Ay24oNcYJ36srqUZMgLEB94JT'
   })*/
 
-  var s3 = new AWS.S3();
+  //var s3 = new AWS.S3();
   const params = {
     Bucket: "practica1-g25-imagenes",
     Key: nombre,
@@ -426,8 +426,140 @@ app.post('/subirFoto', function(req, res){
   };
 
   const putResult = s3.putObject(params).promise();
-  res.json({mensaje: putResult})
+  res.json('correcto')
   //mensaje vacio es que si ingreso
-  console.log(putResult);
+  console.log('mensaje: ' + putResult);
 
 })
+
+app.post('/subirFoto2', function(req, res){
+
+  console.log("subir fotos");
+  var nombreFoto = req.body.nombreImagen;
+  var foto = req.body.imagenBase64;
+  var extension = req.body.extension;
+  var usuario = req.body.userName;
+  var album = req.body.album;
+
+  var nombre = 'Fotos_Publicadas/' + usuario + '_' + album + '_' + nombreFoto + '.' + extension;
+
+  console.log(nombre);
+
+  //convertir base 64 a bytes
+  let buffer = new Buffer.from(foto, 'base64');
+
+  //-------------
+  /*AWS.config.update({
+    region: 'us-east-2',
+    accessKeyId: 'AKIA3EBUF4FC4WB2TUVZ',
+    secretAccessKey: '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'
+  })*/
+
+  //var s3 = new AWS.S3();
+  const params = {
+    Bucket: "practica1-g25-imagenes",
+    Key: nombre,
+    Body: buffer,
+    ContentType: 'image',
+    ACL: 'public-read'
+  };
+
+  const putResult = s3.putObject(params).promise();
+  res.json('correcto')
+  //mensaje vacio es que si ingreso
+  console.log('mensaje: ' + putResult);
+
+})
+
+//obtener foto en s3
+app.post('/obtenerFoto', function (req, res) {
+  //var carpeta = req.body.carpeta;
+  var id = req.body.id;
+  //direcccion donde esta el archivo a obtener
+  var nombrei = id; //carpeta + "/" + id;
+  var getParams = {
+    Bucket: 'practica1-g25-imagenes',
+    Key: nombrei
+  }
+  s3.getObject(getParams, function (err, data) {
+    if (err)
+      res.json("error")
+    //de bytes a base64
+    var dataBase64 = Buffer.from(data.Body).toString('base64');
+    res.json(dataBase64)
+
+  });
+
+});
+
+app.post("/guardarFotoPerfil", function(req, res){
+  let body = req.body;
+  let idFoto = body.idFoto;
+  let idUser = body.idUser;
+  let ubicacion = body.ubicacion;
+
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var input = {
+    'idFoto': idFoto,
+    'idUser': idUser,
+    'ubicacion': ubicacion
+  }
+
+  var params = {
+    TableName: 'FotosPerfil',
+    Item: input
+  };
+
+  docClient.put(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err);
+          console.log("photo save error");
+      } else {
+        res.send("success");
+        console.log("photo save success");
+        //console.log(res);
+        console.log(res.data);
+        console.log(ubicacion + " guardada");
+      }
+  });
+});
+
+app.post("/guardarFotos", function(req, res){
+  let body = req.body;
+  let idFoto = body.idFoto;
+  let usuario = body.userName;
+  let album = body.album;
+  let nombre = body.nombreI;
+  let ubicacion = body.ubicacion;
+
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var input = {
+    'idFoto': idFoto,
+    'album': album,
+    'nombreFoto': nombre,
+    'ubicacion': ubicacion,
+    'usuario': usuario
+  }
+
+  var params = {
+    TableName: 'FotosPublicadas',
+    Item: input
+  };
+
+  docClient.put(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err);
+          console.log("photo save error");
+      } else {
+        res.send("success");
+        console.log("photo save success");
+        //console.log(res);
+        console.log(res.data);
+        console.log(ubicacion + " guardada");
+      }
+  });
+});
