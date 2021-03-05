@@ -6,6 +6,7 @@ import Consumiendo from '../components/ConsumiendoGet'
 import Profile from '../pages/Profile';
 import Registo from '../pages/Registro';
 import UploadPhoto from '../pages/UploadPhoto';
+import Fotos from '../pages/Fotos';
 
 
 //rutas creadas LOGIN
@@ -19,6 +20,7 @@ function Routes(){
                 <Route exact path="/prueba" component={Consumiendo}/>
                 <Route exact path="/register" component={Registo}/>
                 <Route exact path="/upload" component={UploadPhoto}/>
+                <Route exact path="/fotos" component={Fotos}/>
             </Switch>
         </BrowserRouter>
     );

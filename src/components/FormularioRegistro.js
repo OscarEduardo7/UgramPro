@@ -8,10 +8,12 @@ import swal from 'sweetalert';
 const url = "http://localhost:9000/register";
 const url2 = "http://localhost:9000/todos2";
 const url3 = "http://localhost:9000/subirFoto";
+const url4 = "http://localhost:9000/guardarFotoPerfil";
 const cookies = new Cookies();
 let enBase64 = '';
 let imagen = user;
 let ext = '';
+let FechaHora = '';
 
 export default class FormularioRegistro extends Component{
 
@@ -67,7 +69,12 @@ export default class FormularioRegistro extends Component{
         console.log("va a registrar");
         if(existe == 0){
             console.log("no existe");
-            axios.post(url, {userName: this.state.userName, nombre: this.state.name, apellido: this.state.lastName, contra: md5(this.state.contra), foto: this.state.foto})
+            var fechahora = new Date();
+            var fecha = fechahora.getDate() + '-' + (fechahora.getMonth() + 1) + '-' + fechahora.getFullYear();
+            var hora = fechahora.getHours() + ':' + fechahora.getMinutes() + ':' + fechahora.getSeconds();
+            FechaHora = fecha + '_' + hora;
+            console.log(FechaHora);
+            axios.post(url, {userName: this.state.userName, nombre: this.state.name, apellido: this.state.lastName, contra: md5(this.state.contra), foto: 'Fotos_Perfil/' + this.state.userName + '_' + FechaHora + '.' + ext})
             .then(response=>{
                 console.log('response');
                 console.log(response.data);
@@ -88,7 +95,11 @@ export default class FormularioRegistro extends Component{
                         text: "Registrado correctamente",
                         icon: "success",
                         button: "Aceptar"
-                    });
+                    })
+                    .then((value) => {
+                        window.location.href="./"
+                        //swal(`The returned value is: ${value}`);
+                      });
                     //alert("El usuario fue registrado");
                     //cookies
                     /*var usuario = response.data.Item;
@@ -97,7 +108,7 @@ export default class FormularioRegistro extends Component{
                     cookies.set('apellido', usuario.lastName, {path: "/"});
                     cookies.set('contra', usuario.contra, {path: "/"});
                     alert(`Bienvenido ${usuario.name}.`);*/
-                    window.location.href="./"//"./profile"
+                    //window.location.href="./"//"./profile"
                 }
             })
             .catch(error=>{
@@ -132,16 +143,31 @@ export default class FormularioRegistro extends Component{
 
     GuardarFoto=async()=>{
         console.log('guardar foto');
-        axios.post(url3, {nombreImagen: 'perfil', imagenBase64: this.state.foto, extension: ext, userName: this.state.userName})
+        axios.post(url3, {nombreImagen: FechaHora, imagenBase64: this.state.foto, extension: ext, userName: this.state.userName})
         .then(response=>{
-            if (response.data == ""){
+            console.log('response.data');
+            console.log(response.data);
+            if (response.data == "correcto"){
                 console.log('foto guardada');
+                this.GuardarFotoenBD();
             }else{
                 console.log('error al guardar la foto');
             }
         })
         .catch(error=>{
             console.log("error")
+        })
+    }
+
+    GuardarFotoenBD=async()=>{
+        console.log('guardar foto en tabla');
+        axios.post(url4, {idFoto: this.state.userName + '_' + FechaHora + '.' + ext, idUser: this.state.userName, ubicacion: 'Fotos_Perfil/' + this.state.userName + '_' + FechaHora + '.' + ext})
+        .then(response=>{
+            if(response.data == "success"){
+                console.log('foto guardada en la tabla');
+            }else{
+                console.log('error al guardar foto en tabla');
+            }
         })
     }
 
