@@ -76,7 +76,7 @@ app.get("/login", function(req, res){
 });
 
 
-//este no se toca.
+//este no se toca. - obtener usuario para login
 app.post("/login2", function(req, res){
   let body = req.body;
   let usuario = body.userName;
@@ -109,7 +109,7 @@ app.post("/login2", function(req, res){
 });
 
 
-//este no se toca..
+//este no se toca.. / actualizar usuario
 app.put("/editarUsuario", function(req, res){
   let body = req.body;
   let usuario = body.userName;
@@ -140,7 +140,7 @@ app.put("/editarUsuario", function(req, res){
   });
 });
 
-//este no se toca...
+//este no se toca... / obtener Albumes de un usuario especifico
 app.post("/getAlbumes", function(req, res){
   let body = req.body;
   let usuario = body.userName;
