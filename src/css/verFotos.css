@@ -1,0 +1,15 @@
+.tam{
+    margin-left: 25px;
+}
+
+.rou{
+    border-radius: 10px;
+    height: 200px;
+    width: 200px;
+    border: 2px solid black;
+}
+
+.album{
+    background-color: #3eb4d8;
+    padding: 50px;
+}

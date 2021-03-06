@@ -360,7 +360,7 @@ export default class Profile extends Component {
                     <div className="salto"></div>
                     <div className="row justify-content-md-center">
                         <div className="col-lg-3">
-                        <button type="sumit" className="btn btn-info btn-lg btni">Ver fotos</button>
+                        <button type="sumit" className="btn btn-info btn-lg btni" onClick={()=>{window.location.href='./fotos';}}>Ver fotos</button>
                         </div>
                         <div className="col-md-auto">
                         <button type="button" className="btn btn-info btn-lg btni" onClick={()=>this.modaEditarAlbum()}>Editar Albumes</button>
@@ -369,7 +369,7 @@ export default class Profile extends Component {
                         <button type="button" className="btn btn-info btn-lg btni" onClick={()=>this.modaEditarEstado()}>Editar Perfil</button>
                         </div>
                         <div className="col-lg-3">
-                        <button type="button" className="btn btn-info btn-lg btni">Subir Fotos</button>
+                        <button type="button" className="btn btn-info btn-lg btni"onClick={()=>{window.location.href='./upload';}}>Subir Fotos</button>
                         </div>
                     </div>
                     <div className="salto"></div>

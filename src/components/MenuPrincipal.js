@@ -39,10 +39,13 @@ export default class MenuPrincipal extends Component {
 	    </button>
         <div>
         <div className={menuClass} aria-labelledby="dropdownMenuButton">
-            <a className="dropdown-item" href="#">
+            <a className="dropdown-item" href="./profile">
+                Mi perfil
+            </a>
+            <a className="dropdown-item" href="./fotos">
                 Ver fotos
             </a>
-            <a className="dropdown-item" href="#">
+            <a className="dropdown-item" href="./upload">
                 Subir fotos
             </a>
             <a className="dropdown-item" href="#" onClick={()=>this.CerrarSesion()}>

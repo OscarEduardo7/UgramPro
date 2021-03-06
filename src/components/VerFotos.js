@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 import user from '../img/user.png';
-import { RViewerTrigger, RViewer} from 'react-viewerjs';
-import { Card } from 'react-bootstrap';
-import bootstrap from 'react-bootstrap';
+import { RViewer, RViewerTrigger } from 'react-viewerjs';
+import {Card} from 'react-bootstrap'
+import '../css/verFotos.css'
 
 const urlAlbumes = "http://localhost:9000/albumes2";
 const urlFotosPerfil = "http://localhost:9000/fotosPerfilUsuario";
@@ -136,47 +136,33 @@ export default class VerFotos extends Component{
             fotourl = 'https://practica1-g25-imagenes.s3.us-east-2.amazonaws.com/' + fotourl;
             this.state.perfilMostrar.push(fotourl)
         }
-        console.log(this.state.perfilMostrar);
-
     }
 
     render(){
         
         var datos2 = this.state.perfilMostrar.map((p,i)=>{
-            return <option>{p}</option>
+            return <figure className="figure tam">
+            <img src={p} className="rou" alt="..."/>
+            <figcaption className="figure-caption text-end">Foto de perfil #{i+1}</figcaption>
+          </figure>
         });
 
         return(
          
-            <div  className="mb-3">
-                <h1>hola</h1>
-                <div className="user-img-def">
-                    <img src={`${fotoBase64}`} />
+            <div>
+                <div className="container album">
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>FOTOS DE PERFIL</Card.Title>
+                            <div className="text-center">
+                            {datos2}
+                            </div>
+                        </Card.Body>
+                    </Card>
+                    
                 </div>
-                        <div className="mb-3">
-                            <label htmlFor="uUsuario" className="form-label">Usuario</label>
-                            <input onChange={e => this.setState({x: e.target.value})} type="text" className="form-control" id="uUsuario" placeholder="Usuario" />
-                        </div>
-                        <div className="mb-3">
-                            <RViewer imageUrls={this.state.perfilMostrar}>
-                            <div style={{display: 'flex', marginTop: '40px'}}>
-                            {this.state.perfilMostrar.map((p, i)=>{
-                                return(
-                                    <RViewerTrigger index={i}>
-                                        <div className="user-img-def">
-                                                <img src={p} style={{width: '150px', height: '150px', marginLeft: '20px', border: '2px solid black'}}/>
-                                                </div>
-                                    </RViewerTrigger>
-                                )
-                            })}</div>
-
-                            </RViewer>
-                        </div>
             </div>
             
         )
     }
 }
-
-/**        
-             */
