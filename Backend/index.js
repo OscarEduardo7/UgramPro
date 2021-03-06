@@ -115,6 +115,7 @@ app.put("/editarUsuario", function(req, res){
   let usuario = body.userName;
   let nombre = body.nombre;
   let apellido = body.apellido;
+  let foto = body.foto
 
   var docClient = new AWS.DynamoDB.DocumentClient();
 
@@ -123,10 +124,11 @@ app.put("/editarUsuario", function(req, res){
     Key: {
       'userName': usuario
     },
-    UpdateExpression: "set nombre= :nom, apellido= :las",
+    UpdateExpression: "set nombre= :nom, apellido= :las, foto= :miF",
     ExpressionAttributeValues:{
       ":nom": nombre,
-      ":las": apellido
+      ":las": apellido,
+      ":miF": foto
     },
     ReturnValues: "UPDATED_NEW"
   };

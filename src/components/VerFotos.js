@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import user from '../img/user.png';
 import { RViewerTrigger, RViewer} from 'react-viewerjs';
+import { Card } from 'react-bootstrap';
 
 const urlAlbumes = "http://localhost:9000/albumes2";
 const urlFotosPerfil = "http://localhost:9000/fotosPerfilUsuario";
@@ -22,7 +23,8 @@ export default class VerFotos extends Component{
         fotosPublicadas: [],
         userName: '',
         foto: '',
-        x: ''
+        x: '',
+        miFoto: ''
     }
 
 
@@ -113,46 +115,27 @@ export default class VerFotos extends Component{
             console.log('la extension es: ' + ext);
             fotoBase64 = 'data:image/' + ext + ';base64,' + fotoBase64;
             console.log(fotoBase64);
+            this.setState({
+                miFoto: fotoBase64
+            });
         })
         .catch(error=>{
-            console.error('error')
+            console.error('error al convertir foto')
         })
     }
 
     render(){
         
-        /*let Perfil =[
-            require(fotoBase64),
-            require('../img/user.png')
-        ];*/
+        let fotoUrl = this.state.miFoto;
         return(
-            <div  className="mb-3">
-                <h1>hola</h1>
-                <div className="user-img-def">
-                    <img src={`${fotoBase64}`} />
-                </div>
-                        <div className="mb-3">
-                            <label htmlFor="uUsuario" className="form-label">Usuario</label>
-                            <input onChange={e => this.setState({x: e.target.value})} type="text" className="form-control" id="uUsuario" placeholder="Usuario" />
-                        </div>
+            <div className="container">
+                <Card style={{ width: '200px' }}>
+                <Card.Img variant="top" src={this.state.miFoto} />
+                    <Card.Body>
+                        <Card.Title>Foto de perfil</Card.Title>
+                    </Card.Body>
+                </Card>
             </div> 
         )
     }
 }
-
-/**        
-            <div>
-
-                <RViewer imageUrls={Perfil}>
-                    <div style={{display: 'flex', marginTop: '40px'}}>
-                        {Perfil.map((p, i)=>{
-                            return(
-                                <RViewerTrigger index={i}>
-                                        <img src={p} style={{width: '150px', height: '150px', marginLeft: '20px', border: '2px solid black'}}/>
-                                </RViewerTrigger>
-                            )
-                        })}
-                    </div>
-
-                </RViewer>
-            </div>    */

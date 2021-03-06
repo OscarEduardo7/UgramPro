@@ -8,12 +8,22 @@ import axios from 'axios';
 import md5 from 'md5';
 import swal from 'sweetalert';
 import { timers } from 'jquery';
+import user from '../img/user.png';
 
 const cookiess = new Cookies();
 const Surl = "http://localhost:9000/editarUsuario";
 const Aurl = "http://localhost:9000/getAlbumes";
 const Curl = "http://localhost:9000/newAlbum";
 const Eurl = "http://localhost:9000/deleteAlbum";
+const urlUsuario = "http://localhost:9000/usuarioId";
+const urlFoto = "http://localhost:9000/obtenerFoto";
+const url3 = "http://localhost:9000/subirFoto";
+const url4 = "http://localhost:9000/guardarFotoPerfil";
+
+let enBase64 = '';
+let imagen = user;
+let ext = '';
+let FechaHora = '';
 
 export default class Profile extends Component {
     
@@ -25,7 +35,8 @@ export default class Profile extends Component {
             userName: '',
             nombre: '',
             apellido: '',
-            contra: ''
+            contra: '',
+            foto: ''
         },
         eliminar:{
             seleccionado: '',
@@ -33,7 +44,8 @@ export default class Profile extends Component {
         album:{
         crearAlbum: '',
         },
-        Albumes: []
+        Albumes: [],
+        miFoto: ''
     };
 
     handleChange=async e=>{
@@ -83,18 +95,25 @@ export default class Profile extends Component {
             window.location.href='./';
         }
         this.ObtenerAlbum();
+        this.Usuario();
     }
 
 
     //EDITAR PERFIL
     EditarPerfil=async()=>{
+
+        this.state.form.foto = enBase64;
+        var fechahora = new Date();
+        var fecha = fechahora.getDate() + '-' + (fechahora.getMonth() + 1) + '-' + fechahora.getFullYear();
+        var hora = fechahora.getHours() + ':' + fechahora.getMinutes() + ':' + fechahora.getSeconds();
+        FechaHora = fecha + '_' + hora;
         // Revisar si las contraseñas son correctas.
         let contraA = md5(this.state.form.contra);
         let contraP = cookiess.get("contra");
         //si son iguales que actualice
         if(contraA == contraP){
             console.log(this.state.form);
-            axios.put(Surl,{userName: cookiess.get("userName"), nombre: this.state.form.nombre, apellido: this.state.form.apellido})
+            axios.put(Surl,{userName: cookiess.get("userName"), nombre: this.state.form.nombre, apellido: this.state.form.apellido, foto: 'Fotos_Perfil/' + cookiess.get("userName") + '_' + FechaHora + '.' + ext})
             .then(response=>{
                 if(response.data == "Nel"){
                     swal({
@@ -106,6 +125,8 @@ export default class Profile extends Component {
                     //alert("No se pudo actualizar los datos.");
                     this.modaEditarEstado();
                 }else{
+                    //guardar foto de perfil
+                    this.GuardarFoto();
                     swal({
                         title: "Actualizado",
                         text: "Se actualizaron los datos.",
@@ -137,6 +158,36 @@ export default class Profile extends Component {
                 button: "Aceptar"
             });
         }
+    }
+
+    GuardarFoto=async()=>{
+        console.log('guardar foto');
+        axios.post(url3, {nombreImagen: FechaHora, imagenBase64: this.state.form.foto, extension: ext, userName: cookiess.get('userName')})
+        .then(response=>{
+            console.log('response.data');
+            console.log(response.data);
+            if (response.data == "correcto"){
+                console.log('foto guardada');
+                this.GuardarFotoenBD();
+            }else{
+                console.log('error al guardar la foto');
+            }
+        })
+        .catch(error=>{
+            console.log("error")
+        })
+    }
+
+    GuardarFotoenBD=async()=>{
+        console.log('guardar foto en tabla');
+        axios.post(url4, {idFoto: cookiess.get('userName') + '_' + FechaHora + '.' + ext, idUser: cookiess.get('userName'), ubicacion: 'Fotos_Perfil/' + cookiess.get('userName') + '_' + FechaHora + '.' + ext})
+        .then(response=>{
+            if(response.data == "success"){
+                console.log('foto guardada en la tabla');
+            }else{
+                console.log('error al guardar foto en tabla');
+            }
+        })
     }
 
     //para editar albumes
@@ -213,8 +264,71 @@ export default class Profile extends Component {
         });
     }
 
+    //PARA LA FOTO DE PERFIL
+    Usuario=async()=>{
+        axios.post(urlUsuario,{userName: cookiess.get('userName')})
+        .then(response=>{
+            const ftp = (response.data).Items;
+            console.log(ftp);
+            this.setState({
+                foto: ftp[0].foto
+            });
+            console.log("Foto " + this.state.foto);
+            this.ObtenerFoto();
+        })
+        .catch(error=>{
+            console.error("error")
+        })
+    }
+
+    ObtenerFoto=async()=>{
+        axios.post(urlFoto,{id: this.state.foto})
+        .then(response=>{
+            console.log('mostrar foto');
+            let fotoBase64 = response.data;
+            console.log(response);
+            console.log(fotoBase64.length);
+            console.log(fotoBase64);
+            var aux = [];
+            aux = this.state.foto.split('.');
+            var ext = aux[1]
+            console.log('la extension es: ' + ext);
+            fotoBase64 = 'data:image/' + ext + ';base64,' + fotoBase64;
+            this.setState({
+                miFoto: fotoBase64
+            });
+        })
+        .catch(error=>{
+            console.error('error al convertir foto')
+        })
+    }
+
 
     render() {
+
+        const convertirBase64=(archivos)=>{
+            Array.from(archivos).forEach(archivo=>{
+                var reader = new FileReader();
+                reader.readAsDataURL(archivo);
+                reader.onload=function(){
+                    var aux=[];
+                    var base64 = reader.result;
+                    imagen = base64;
+                    console.log("a base 64");
+                    console.log(imagen);
+                    aux = base64.split(',');
+                    enBase64 = aux[1];
+                    console.log(enBase64);
+                    var aux2, aux3 = [];
+                    aux2 =aux[0].split('/');
+                    aux3 = aux2[1].split(';');
+                    ext = aux3[0]
+                    console.log('la extension es: ' + ext);
+                }
+            })
+        }
+
+        let fotoUrl = this.state.miFoto;
         let usuario = cookiess.get("userName");
         let nombre = cookiess.get("nombre");
         let apellido = cookiess.get("apellido");
@@ -233,7 +347,7 @@ export default class Profile extends Component {
                 <div className="container-lg">
                 <div className="card text-center">
                     <div className="col1">
-                        <img  className="fotoPerfil border border-3" src="https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg"></img>
+                        <img  className="fotoPerfil border border-3" src={fotoUrl}></img>
                     </div>
                     <div className="usuario">
                     <h2>{ usuario }</h2>
@@ -276,7 +390,7 @@ export default class Profile extends Component {
                                         <input className="form-control" type="text" name="userName" id="userName" width="50" placeholder={usuario} readOnly onChange={this.handleChange}/>
                                         <br></br>
                                         <label htmlFor="userNombre">Nombre</label>
-                                        <input className="form-control" type="text" name="nombre" id="nombre" placeholder={nombre} onChange={this.handleChange}/>
+                                        <input className="form-control" type="text" name="nombre" id="nombre"  placeholder={nombre} onChange={this.handleChange}/>
                                         <br></br>
                                         <label htmlFor="userNombre">Apellido</label>
                                         <input className="form-control" type="text" name="apellido" id="apellido" placeholder={apellido} onChange={this.handleChange}/>
@@ -284,11 +398,11 @@ export default class Profile extends Component {
                                     </div>
                                 </div>
                                 <div className="col-2">
-                                    <img  className="fotoPerfil2 border border-3" src="https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg"></img>
+                                    <img  className="fotoPerfil2 border border-3" src={imagen}></img>
                                     <br></br>
                                     <div className="div_img">
                                         <p className="texto">Cambiar Foto</p>
-                                    <input className="btn_subir" accept="image/png,image/jpeg" type="file" name="file" id="btn_subir"/>
+                                    <input className="btn_subir" accept="image/png, image/jpeg" type="file" multiple id="btn_subir" onChange={(e)=>convertirBase64(e.target.files)}/>
                                     </div>
                                 </div>
                             </div>
