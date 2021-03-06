@@ -4,6 +4,7 @@ import axios from 'axios';
 import user from '../img/user.png';
 import { RViewerTrigger, RViewer} from 'react-viewerjs';
 import { Card } from 'react-bootstrap';
+import bootstrap from 'react-bootstrap';
 
 const urlAlbumes = "http://localhost:9000/albumes2";
 const urlFotosPerfil = "http://localhost:9000/fotosPerfilUsuario";
@@ -21,10 +22,11 @@ export default class VerFotos extends Component{
         fotosPerfil: [],
         albumes: [],
         fotosPublicadas: [],
+        general: [],
         userName: '',
         foto: '',
         x: '',
-        miFoto: ''
+        perfilMostrar: []
     }
 
 
@@ -33,10 +35,9 @@ export default class VerFotos extends Component{
             window.location.href='./';
         }
         this.state.userName = cookies.get("userName");
-        console.log('usuario' + this.state.userName);
+        //console.log('usuario' + this.state.userName);
         this.RecuperarAlbumes();
         this.FotosDePerfil();
-        this.Publicadas();
         this.Usuario();
     }
 
@@ -49,6 +50,7 @@ export default class VerFotos extends Component{
             });
             console.log("albumes");
             console.log(this.state.albumes);
+            this.Publicadas();
         })
         .catch(error=>{
             console.error("error")
@@ -64,6 +66,7 @@ export default class VerFotos extends Component{
             });
             console.log("Fotos de perfil");
             console.log(this.state.fotosPerfil);
+            this.RecuperarFotosPerfil();
         })
         .catch(error=>{
             console.error("error")
@@ -94,15 +97,15 @@ export default class VerFotos extends Component{
                 foto: ftp[0].foto
             });
             console.log("Foto " + this.state.foto);
-            this.ObtenerFoto();
+            this.ObtenerFoto(this.state.foto);
         })
         .catch(error=>{
             console.error("error")
         })
     }
 
-    ObtenerFoto=async()=>{
-        axios.post(urlFoto,{id: this.state.foto})
+    ObtenerFoto=async(param)=>{
+        axios.post(urlFoto,{id: param})
         .then(response=>{
             console.log('mostrar foto');
             fotoBase64 = response.data;
@@ -118,24 +121,62 @@ export default class VerFotos extends Component{
             this.setState({
                 miFoto: fotoBase64
             });
+            return fotoBase64;
         })
         .catch(error=>{
             console.error('error al convertir foto')
         })
     }
 
+    RecuperarFotosPerfil=async()=>{
+        //obtener ubicacion de todas las fotos de perfil
+        for(let i=0; i < this.state.fotosPerfil.length; i++){
+            var fp = this.state.fotosPerfil[i].ubicacion;
+            var fotourl = fp.replace(":", "%3A");
+            fotourl = 'https://practica1-g25-imagenes.s3.us-east-2.amazonaws.com/' + fotourl;
+            this.state.perfilMostrar.push(fotourl)
+        }
+        console.log(this.state.perfilMostrar);
+
+    }
+
     render(){
         
-        let fotoUrl = this.state.miFoto;
+        var datos2 = this.state.perfilMostrar.map((p,i)=>{
+            return <option>{p}</option>
+        });
+
         return(
-            <div className="container">
-                <Card style={{ width: '200px' }}>
-                <Card.Img variant="top" src={this.state.miFoto} />
-                    <Card.Body>
-                        <Card.Title>Foto de perfil</Card.Title>
-                    </Card.Body>
-                </Card>
-            </div> 
+         
+            <div  className="mb-3">
+                <h1>hola</h1>
+                <div className="user-img-def">
+                    <img src={`${fotoBase64}`} />
+                </div>
+                        <div className="mb-3">
+                            <label htmlFor="uUsuario" className="form-label">Usuario</label>
+                            <input onChange={e => this.setState({x: e.target.value})} type="text" className="form-control" id="uUsuario" placeholder="Usuario" />
+                        </div>
+                        <div className="mb-3">
+                            <RViewer imageUrls={this.state.perfilMostrar}>
+                            <div style={{display: 'flex', marginTop: '40px'}}>
+                            {this.state.perfilMostrar.map((p, i)=>{
+                                return(
+                                    <RViewerTrigger index={i}>
+                                        <div className="user-img-def">
+                                                <img src={p} style={{width: '150px', height: '150px', marginLeft: '20px', border: '2px solid black'}}/>
+                                                </div>
+                                    </RViewerTrigger>
+                                )
+                            })}</div>
+
+                            </RViewer>
+                        </div>
+            </div>
+            
         )
     }
 }
+
+/**        
+             */
