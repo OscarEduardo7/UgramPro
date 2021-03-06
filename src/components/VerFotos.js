@@ -170,64 +170,58 @@ export default class VerFotos extends Component{
           </figure>
         });
 
+        var datosP = this.state.general.map((g, i)=>{
+            return<div className="espacio"> <Card>
+                <Card.Body>
+                <Card.Title>{this.state.albumes[i].titulo}</Card.Title>
+                <div className="text-center divo">
+                {g.map((u,j)=>{
+                    return(
+                        <figure className="figure tam">
+                            <img src={u} className="rou"/>
+                        <figcaption className="figure-caption text-end">Foto</figcaption>
+                        </figure>
+                    )
+                })}
+                </div>
+                </Card.Body>
+                </Card>
+                </div>
+        });
+
         return(
          
+        <div>
             <div>
                 <div className="container album">
                     <Card>
                         <Card.Body>
                             <Card.Title>FOTOS DE PERFIL</Card.Title>
-                            <div className="text-center">
+                            <div className="text-center divo">
                             {datos2}
                             </div>
                         </Card.Body>
-                    </Card>
-                    
+                    </Card> 
+                    {datosP}
                 </div>
-            <div  className="mb-3">
-                        <div className="mb-3">
-                            <label htmlFor="uUsuario" className="form-label">Usuario</label>
-                            <input onChange={e => this.setState({x: e.target.value})} type="text" className="form-control" id="uUsuario" placeholder="Usuario" />
-                        </div>
-                        <div className="mb-3">
-                            <RViewer imageUrls={this.state.perfilMostrar}>
-                            <div style={{display: 'flex', marginTop: '40px'}}>
-                            {this.state.perfilMostrar.map((p, i)=>{
-                                return(
-                                    <RViewerTrigger index={i}>
-                                        <div className="user-img-def">
-                                                <img src={p} style={{width: '150px', height: '150px', marginLeft: '20px', border: '2px solid black'}}/>
-                                                </div>
-                                    </RViewerTrigger>
-                                )
-                            })}</div>
-
-                            </RViewer>
-                        </div>
-
-                        <div className="mb-3">
-                            <RViewer imageUrls={this.state.general}>
-                            <div style={{display: 'flex', marginTop: '40px'}}>
-                            {this.state.general.map((g, i)=>{
-                                
-                                    return(
-                                        g.map((u,j)=>{
-                                            return(
-                                                <RViewerTrigger index={i + j}>
-                                                    <div className="user-img-def">
-                                                            <img src={u} style={{width: '150px', height: '150px', marginLeft: '20px', border: '2px solid black'}}/>
-                                                            </div>
-                                                </RViewerTrigger>
-                                            )
-                                        })
-                                    )
-                                
-                            })}</div>
-
-                            </RViewer>
-                        </div>
             </div>
-            
+
+            <div style={{display: 'flex', marginTop: '40px'}}>
+            {this.state.general.map((g, i)=>{
+                    return(   
+                        g.map((u,j)=>{
+                            return(
+                                <RViewerTrigger index={i + j}>
+                                    <div className="user-img-def">
+                                            <img src={u} style={{width: '150px', height: '150px', marginLeft: '20px', border: '2px solid black'}}/>
+                                            </div>
+                                </RViewerTrigger>
+                            )
+                        })
+                    )
+            })}
+            </div>
+        </div>    
         )
     }
 }
