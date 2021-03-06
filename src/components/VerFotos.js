@@ -82,6 +82,7 @@ export default class VerFotos extends Component{
             });
             console.log("Fotos publicadas por " + this.state.userName);
             console.log(this.state.fotosPublicadas);
+            this.Ordenar();
         })
         .catch(error=>{
             console.error("error")
@@ -109,15 +110,15 @@ export default class VerFotos extends Component{
         .then(response=>{
             console.log('mostrar foto');
             fotoBase64 = response.data;
-            console.log(response);
-            console.log(fotoBase64.length);
-            console.log(fotoBase64);
+        //    console.log(response);
+        //    console.log(fotoBase64.length);
+        //    console.log(fotoBase64);
             var aux = [];
             aux = this.state.foto.split('.');
             var ext = aux[1]
-            console.log('la extension es: ' + ext);
+        //    console.log('la extension es: ' + ext);
             fotoBase64 = 'data:image/' + ext + ';base64,' + fotoBase64;
-            console.log(fotoBase64);
+        //    console.log(fotoBase64);
             this.setState({
                 miFoto: fotoBase64
             });
@@ -128,7 +129,7 @@ export default class VerFotos extends Component{
         })
     }
 
-    RecuperarFotosPerfil=async()=>{
+    RecuperarFotosPerfil(){
         //obtener ubicacion de todas las fotos de perfil
         for(let i=0; i < this.state.fotosPerfil.length; i++){
             var fp = this.state.fotosPerfil[i].ubicacion;
@@ -140,6 +141,28 @@ export default class VerFotos extends Component{
 
     }
 
+    Ordenar(){
+        //recorrer albumes
+        for(let i =0; i < this.state.albumes.length; i++){
+            var alb = this.state.albumes[i].titulo;
+            //recorrer fotos publicadas
+            var temp = [];
+            for(let j=0; j < this.state.fotosPublicadas.length; j++){
+                var pertenece = this.state.fotosPublicadas[j].album;
+                if(alb == pertenece){
+                    var fp = this.state.fotosPublicadas[j].ubicacion;
+                    var fotourl = fp.replace(' ', '+');
+                    fotourl = 'https://practica1-g25-imagenes.s3.us-east-2.amazonaws.com/' + fotourl;
+                    temp.push(fotourl);
+                }
+            }
+            this.state.general.push(temp);
+        }
+        console.log('Fotos Publicadas');
+        console.log(this.state.general);
+    }
+
+
     render(){
         
         var datos2 = this.state.perfilMostrar.map((p,i)=>{
@@ -149,10 +172,6 @@ export default class VerFotos extends Component{
         return(
          
             <div  className="mb-3">
-                <h1>hola</h1>
-                <div className="user-img-def">
-                    <img src={`${fotoBase64}`} />
-                </div>
                         <div className="mb-3">
                             <label htmlFor="uUsuario" className="form-label">Usuario</label>
                             <input onChange={e => this.setState({x: e.target.value})} type="text" className="form-control" id="uUsuario" placeholder="Usuario" />
@@ -168,6 +187,28 @@ export default class VerFotos extends Component{
                                                 </div>
                                     </RViewerTrigger>
                                 )
+                            })}</div>
+
+                            </RViewer>
+                        </div>
+
+                        <div className="mb-3">
+                            <RViewer imageUrls={this.state.general}>
+                            <div style={{display: 'flex', marginTop: '40px'}}>
+                            {this.state.general.map((g, i)=>{
+                                
+                                    return(
+                                        g.map((u,j)=>{
+                                            return(
+                                                <RViewerTrigger index={i + j}>
+                                                    <div className="user-img-def">
+                                                            <img src={u} style={{width: '150px', height: '150px', marginLeft: '20px', border: '2px solid black'}}/>
+                                                            </div>
+                                                </RViewerTrigger>
+                                            )
+                                        })
+                                    )
+                                
                             })}</div>
 
                             </RViewer>
