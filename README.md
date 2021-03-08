@@ -96,11 +96,11 @@ Los siguientes usuarios de **IAM** fueron utilizados para obtener los servicios 
 
 - - -
 
-<img src="imagenesDocu\perfil.PNG" border="2" align="center"/>
+<img src="imagenesDocu\perfil.png" border="2" align="center"/>
 
 - - -
 
-<img src="imagenesDocu\subirFoto.PNG" border="2" align="center"/>
+<img src="imagenesDocu\subirfoto.PNG" border="2" align="center"/>
 
 - - -
 
