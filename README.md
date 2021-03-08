@@ -1,6 +1,11 @@
 > En la rama  'master' se encuentra el codigo utilizado.
 
 # Practica1_Grupo25
+
+## [Ugram - Practica 1](http://practica1-g25-paginaweb.s3-website.us-east-2.amazonaws.com/)
+
+- - -
+
 ## Datos de los estudiantes:
 * 201602469 - Oscar Eduardo Mazariegos López.
 * 201612413 - Jennifer Marisol López Orozco.
@@ -68,7 +73,7 @@ Los siguientes usuarios de **IAM** fueron utilizados para obtener los servicios 
   <img src="imagenesDocu\Instancias.PNG" border="2" align="center"/>
 
 * Segurity Groups asociados:
-  <img src="imagenesDocu\segurity.PNG" border="2" align="center"/>
+  <img src="imagenesDocu\segurity.png" border="2" align="center"/>
 
 * Balanceador de carga:
   <img src="imagenesDocu\balancer.PNG" border="2" align="center"/>
