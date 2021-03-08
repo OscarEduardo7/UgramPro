@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import boto3
+import base64
+import logging
 
 app = Flask(__name__)
 CORS(app)
@@ -11,6 +13,13 @@ dynamodb = boto3.resource('dynamodb', aws_access_key_id = "AKIA3EBUF4FC4J6L3CH7"
                           region_name = "us-east-2")
 
 from boto3.dynamodb.conditions import Key, Attr
+
+#s3
+s3 = boto3.client('s3', aws_access_key_id = 'AKIA3EBUF4FC4WB2TUVZ',
+                    aws_secret_access_key = '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',
+                    region_name = "us-east-2")
+
+from botocore.exceptions import ClientError
 
 #-----------------------------------------------------------------------------------------------
 
@@ -272,6 +281,108 @@ def fotosPublicadasUsuario():
     return response
 
 
+@app.route('/albumes2', methods=['POST'])
+def albumes2():
+    if request.method == 'POST':
+        data = request.get_json(force=False)
+        user = data.get('userName')
+        table = dynamodb.Table('Albumes')
+
+        response = table.scan(
+            FilterExpression = 'idUser = :n',
+            ExpressionAttributeValues = {':n': user}
+        )
+
+        items = response['Items']
+
+    return response
+
+@app.route('/usuarioId', methods=['POST'])
+def usuarioId():
+    if request.method == 'POST':
+        data = request.get_json(force=False)
+        user = data.get('userName')
+        table = dynamodb.Table('Usuarios')
+
+        response = table.scan(
+            FilterExpression = 'userName = :n',
+            ExpressionAttributeValues = {':n': user}
+        )
+
+        items = response['Items']
+    
+    return response
+
+#--------------S3------------------
+@app.route('/subirFoto', methods=['POST'])
+def subirFoto():
+    if request.method == 'POST':
+        data = request.get_json(force=False)
+        nombreFoto = data.get('nombreImagen')
+        foto = data.get('imagenBase64')
+        extension = data.get('extension')
+        usuario = data.get('userName')
+
+        nombre = 'Fotos_Perfil/' + usuario + '_' + nombreFoto + '.' + extension
+        print(nombre)
+
+        #convertir base 64 a bytes
+        buffer = base64.b64decode(foto)
+
+        response = s3.put_object(
+            ACL='public-read',
+            Body=buffer,
+            Bucket='practica1-g25-imagenes',
+            Key=nombre,
+            ContentType= 'image'
+        )
+        return 'correcto'
+    
+@app.route('/subirFoto2', methods=['POST'])
+def subirFoto2():
+    if request.method == 'POST':
+        data = request.get_json(force=False)
+        nombreFoto = data.get('nombreImagen')
+        foto = data.get('imagenBase64')
+        extension = data.get('extension')
+        usuario = data.get('userName')
+        album = data.get('album')
+
+        nombre = 'Fotos_Publicadas/' + usuario + '_' + album + '_' + nombreFoto + '.' + extension
+        print(nombre)
+
+        #convertir base 64 a bytes
+        buffer = base64.b64decode(foto)
+
+        response = s3.put_object(
+            ACL='public-read',
+            Body=buffer,
+            Bucket='practica1-g25-imagenes',
+            Key=nombre,
+            ContentType= 'image'
+        )
+        return 'correcto'
+
+
+@app.route('/obtenerFoto', methods=['POST'])
+def obtenerFoto():
+    if request.method == 'POST':
+        data = request.get_json(force=False)
+        nombre = data.get('id')
+
+        response = s3.get_object(
+            Bucket = 'practica1-g25-imagenes',
+            Key = nombre
+        )
+        #print(response['Body'].read())
+        dataBase64 = base64.b64encode(response['Body'].read())
+
+        #obj = s3.Object('practica1-g25-imagenes', nombre)
+        #body = obj.get()['Body'].read()
+        #print(body)
+        return dataBase64 # 'response'
+    
+    
 # se puede setear el puerto que queremos utilizar
 # app.run( port = 8000)
 # si queremos que este en modo escucha para cualquier cambio
