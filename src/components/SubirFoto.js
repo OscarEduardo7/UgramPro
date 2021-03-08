@@ -6,9 +6,9 @@ import md5 from 'md5';
 import user from '../img/user.png';
 import swal from 'sweetalert';
 
-const url = "http://localhost:9000/albumes2";
-const url2 = "http://localhost:9000/subirFoto2";
-const url3 = "http://localhost:9000/guardarFotos";
+const url = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/albumes2";
+const url2 = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/subirFoto2";
+const url3 = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/guardarFotos";
 const cookies = new Cookies();
 let enBase64 = '';
 let imagen = user;

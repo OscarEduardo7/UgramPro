@@ -16,7 +16,7 @@ export default class Consumiendo extends Component {
     //YA SE DEBERIA DE PODER CON AXIOS
     componentDidMount(){
         request
-            .get('http://localhost:9000/todos')
+            .get('http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/todos')
             .end((err, res) => {
                 console.log(JSON.parse(res.text))
                 //Revisar el json, que atributo tiene el array

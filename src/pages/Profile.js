@@ -11,14 +11,14 @@ import { timers } from 'jquery';
 import user from '../img/user.png';
 
 const cookiess = new Cookies();
-const Surl = "http://localhost:9000/editarUsuario";
-const Aurl = "http://localhost:9000/getAlbumes";
-const Curl = "http://localhost:9000/newAlbum";
-const Eurl = "http://localhost:9000/deleteAlbum";
-const urlUsuario = "http://localhost:9000/usuarioId";
-const urlFoto = "http://localhost:9000/obtenerFoto";
-const url3 = "http://localhost:9000/subirFoto";
-const url4 = "http://localhost:9000/guardarFotoPerfil";
+const Surl = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/editarUsuario";
+const Aurl = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/getAlbumes";
+const Curl = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/newAlbum";
+const Eurl = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/deleteAlbum";
+const urlUsuario = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/usuarioId";
+const urlFoto = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/obtenerFoto";
+const url3 = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/subirFoto";
+const url4 = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/guardarFotoPerfil";
 
 let enBase64 = '';
 let imagen = user;
@@ -33,8 +33,8 @@ export default class Profile extends Component {
         modalAlbum: false,
         form:{
             userName: '',
-            nombre: '',
-            apellido: '',
+            nombre: cookiess.get('nombre'),
+            apellido: cookiess.get('apellido'),
             contra: '',
             foto: ''
         },
@@ -137,7 +137,8 @@ export default class Profile extends Component {
                     cookiess.set('userName', cookiess.get("userName"), {path: "/"});
                     cookiess.set('nombre', this.state.form.nombre, {path: "/"});
                     cookiess.set('apellido', this.state.form.apellido, {path: "/"});
-                    setTimeout('document.location.reload()',1000);
+
+                    setTimeout('document.location.reload()',2000);
                     
                 }
             })

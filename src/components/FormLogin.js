@@ -6,7 +6,7 @@ import md5 from 'md5';
 import Cookies from 'universal-cookie';
 import swal from 'sweetalert';
 
-const Surl ="http://localhost:9000/login2";
+const Surl ="http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/login2";
 const cookiess = new Cookies();
 
 export default class FormLogin extends Component {
@@ -42,6 +42,7 @@ export default class FormLogin extends Component {
     }
 
     IniciarSesion=async()=>{
+        console.log("entra iniciar sesion");
         //aplicamos MD5 a la contraseña al enviarla.
         // { this.state }
         axios.post(Surl,{userName: this.state.userName, contra: md5(this.state.contra)})
