@@ -12,8 +12,10 @@ let aws_keys = {
         secretAccessKey: "c5z+FOb2LSHs8LJ9MVYmvLiJHg86TyzmpwQrM1XG"
     },
     rekognition: {
-        accessKeyId: "",
-        secretAccessKey: "" 
+        apiVersion: '2016-06-27',
+        region: 'us-east-2',
+        accessKeyId: "AKIA3EBUF4FCV4YWBYVG",
+        secretAccessKey: "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"
     }
 }
 module.exports = aws_keys

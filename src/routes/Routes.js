@@ -2,6 +2,7 @@ import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 //importamos nuestras pagias
 import Login from '../pages/Login'
+import LoginC from '../pages/LoginC'
 import Consumiendo from '../components/ConsumiendoGet'
 import Profile from '../pages/Profile';
 import Registo from '../pages/Registro';
@@ -21,6 +22,7 @@ function Routes(){
                 <Route exact path="/register" component={Registo}/>
                 <Route exact path="/upload" component={UploadPhoto}/>
                 <Route exact path="/fotos" component={Fotos}/>
+                <Route exact path="/camLogin" component={LoginC}/>
             </Switch>
         </BrowserRouter>
     );

@@ -26,6 +26,8 @@ AWS.config.update(aws_keys.dynamodb);
 //instanciamos los servicios que vamos a utilizar
 const Dynamo = new AWS.DynamoDB(aws_keys.dynamodb);
 const s3 = new AWS.S3(aws_keys.s3);
+const rek = new AWS.Rekognition(aws_keys.rekognition);
+
 //peticion ejemplo
 app.get("/", function(req, res){
     res.json({ mensaje: "HOLA MUNDO"});
@@ -638,3 +640,68 @@ app.post("/usuarioId", function(req, res){
       }
   });
 });
+
+//===================================================== PRACTICA 2 =============================================
+//==============================================================================================================
+
+app.post('/compareFace', function (req, res) { 
+  var body = req.body
+  var imagen1 = body.imagen1;
+  var imagen2 = body.imagen2;
+
+  var params = {
+    SourceImage: {
+        Bytes: Buffer.from(imagen1, 'base64')     
+    }, 
+    TargetImage: {
+        Bytes: Buffer.from(imagen2, 'base64')    
+    },
+    SimilarityThreshold: '85'
+  };
+  rek.compareFaces(params, function(err, data) {
+    if (err) {
+      res.json({mensajeErr: err})
+      console.log("fin comparacion") 
+    } 
+    else {   
+      res.json({Comparacion: data.FaceMatches}); 
+      console.log("fin comparacion")     
+    }
+  });
+});
+
+// Analizar texto
+app.post('/getTexto', function (req, res) { 
+  var imagen = req.body.imagen;
+  var params = {
+    Image: { 
+      Bytes: Buffer.from(imagen, 'base64')
+    }
+  };
+  rek.detectText(params, function(err, data) {
+    if (err) {res.json({mensaje: "Error"})} 
+    else {   
+           res.json(data.TextDetections);      
+    }
+  });
+});
+
+
+// Obtener Etiquetas
+app.post('/tagsProfile', function (req, res) { 
+  var imagen = req.body.imagen;
+  var params = {
+    Image: { 
+      Bytes: Buffer.from(imagen, 'base64')
+    },
+    Attributes: ['ALL']
+  };
+  rek.detectFaces(params, function(err, data) {
+    if (err) {res.json({mensaje: err})} 
+    else {   
+           res.json(data);      
+    }
+  });
+
+});
+

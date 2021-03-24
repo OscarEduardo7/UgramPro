@@ -6,7 +6,7 @@ import md5 from 'md5';
 import Cookies from 'universal-cookie';
 import swal from 'sweetalert';
 
-const Surl ="http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/login2";
+const Surl ="http://localhost:9000/login2";
 const cookiess = new Cookies();
 
 export default class FormLogin extends Component {
@@ -108,13 +108,6 @@ export default class FormLogin extends Component {
         this.IniciarSesion();
     }
 
-
-    /*
-        var datos = this.state.personas.map((p,i) =>{
-            return <li key={i} >{ p.nombre }</li>
-        });
-    */
-
     render(){
 
         return(
@@ -136,6 +129,9 @@ export default class FormLogin extends Component {
                         </div>
                         <button type="submit" className="btn btn-dark">Iniciar Sesión</button>
                         </form>
+                        <p>o</p>
+                        <button className="btn btn-dark" onClick={()=>{window.location.href='./camLogin';}}>Entrá por Cámara</button>
+                        <p> </p>
                         <a href="/register">Registrate ahora</a>
                     <div>
                         <br></br>

@@ -6,11 +6,11 @@ import { RViewer, RViewerTrigger } from 'react-viewerjs';
 import {Card} from 'react-bootstrap'
 import '../css/verFotos.css'
 
-const urlAlbumes = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/albumes2";
-const urlFotosPerfil = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/fotosPerfilUsuario";
-const urlPublicadas = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/fotosPublicadasUsuario";
-const urlUsuario = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/usuarioId";
-const urlFoto = "http://p1-2127715980.us-east-2.elb.amazonaws.com:9000/obtenerFoto";
+const urlAlbumes = "http://localhost:9000/albumes2";
+const urlFotosPerfil = "http://localhost:9000/fotosPerfilUsuario";
+const urlPublicadas = "http://localhost:9000/fotosPublicadasUsuario";
+const urlUsuario = "http://localhost:9000/usuarioId";
+const urlFoto = "http://localhost:9000/obtenerFoto";
 
 const cookies = new Cookies();
 

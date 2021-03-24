@@ -40,6 +40,13 @@
     box-shadow: 0px 0px 5px rgb(0, 0, 0);
 }
 
+.fotoPerfil3{
+    height: 250px;
+    width: 400px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
 .texto{
     text-align: center;
     color: white;
@@ -92,4 +99,8 @@ h1{
     width: 100px;
     height: 100px;
     margin: 10px;
+}
+
+.textA{
+    resize: none;
 }
