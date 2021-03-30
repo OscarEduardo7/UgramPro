@@ -8,6 +8,7 @@ import Profile from '../pages/Profile';
 import Registo from '../pages/Registro';
 import UploadPhoto from '../pages/UploadPhoto';
 import Fotos from '../pages/Fotos';
+import Foto from '../pages/Foto';
 
 
 //rutas creadas LOGIN
@@ -23,6 +24,7 @@ function Routes(){
                 <Route exact path="/upload" component={UploadPhoto}/>
                 <Route exact path="/fotos" component={Fotos}/>
                 <Route exact path="/camLogin" component={LoginC}/>
+                <Route exact path="/foto" component={Foto}/>
             </Switch>
         </BrowserRouter>
     );

@@ -27,6 +27,7 @@ AWS.config.update(aws_keys.dynamodb);
 const Dynamo = new AWS.DynamoDB(aws_keys.dynamodb);
 const s3 = new AWS.S3(aws_keys.s3);
 const rek = new AWS.Rekognition(aws_keys.rekognition);
+const translate = new AWS.Translate(aws_keys.translate);
 
 //peticion ejemplo
 app.get("/", function(req, res){
@@ -537,6 +538,7 @@ app.post("/guardarFotos", function(req, res){
   let album = body.album;
   let nombre = body.nombreI;
   let ubicacion = body.ubicacion;
+  let descripcion = body.descripcion;
 
   var docClient = new AWS.DynamoDB.DocumentClient();
 
@@ -545,7 +547,8 @@ app.post("/guardarFotos", function(req, res){
     'album': album,
     'nombreFoto': nombre,
     'ubicacion': ubicacion,
-    'usuario': usuario
+    'usuario': usuario,
+    'descripcion': descripcion
   }
 
   var params = {
@@ -703,5 +706,74 @@ app.post('/tagsProfile', function (req, res) {
     }
   });
 
+});
+
+// Obtener Etiquetas
+app.post('/detectaretiquetas', function (req, res) { 
+  var imagen = req.body.imagen;
+  var params = {
+    Image: { 
+      Bytes: Buffer.from(imagen, 'base64')
+    }, 
+    MaxLabels: 5
+  };
+  rek.detectLabels(params, function(err, data) {
+    if (err) {res.json({mensaje: "Error"})} 
+    else {   
+           //res.json(texto: data.Labels});      
+           res.json(data);
+    }
+  });
+});
+
+//Amazon Translate
+
+app.post('/translate', (req, res) => {
+  let body = req.body
+
+  let text = body.text;
+  let opcion = body.opcion;
+
+  let params = {
+    SourceLanguageCode: 'auto',
+    TargetLanguageCode: opcion, //'es',
+    Text: text || 'Hello'
+  };
+  translate.translateText(params, function (err, data) {
+    if (err) {
+      console.log(err, err.stack);
+      res.send({ error: err })
+    } else {
+      console.log(data.TranslatedText);
+      res.send(data.TranslatedText)
+    }
+  });
+});
+
+app.post("/foto", function(req, res){
+  let body = req.body;
+  let user = body.userName;
+  let album = body.album;
+  let nombre = body.nombre;
+  let idFoto = user  + '_' + album + '_' + nombre;
+  console.log(idFoto);
+  var docClient = new AWS.DynamoDB.DocumentClient();
+
+  var params = {
+    TableName: 'FotosPublicadas',
+    FilterExpression: 'idFoto = :n',
+    ExpressionAttributeValues: {':n':idFoto}
+  };
+  console.log("id: " + idFoto);
+  console.log("pedir foto publicada por " + user);
+  docClient.scan(params, function (err, data) {
+      if (err) {
+          res.send(err);
+          console.log(err)
+      } else {
+          res.send(data.Items);
+          console.log(data.Items);
+      }
+  });
 });
 

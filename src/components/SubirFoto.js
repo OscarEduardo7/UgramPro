@@ -9,6 +9,8 @@ import swal from 'sweetalert';
 const url = "http://localhost:9000/albumes2";
 const url2 = "http://localhost:9000/subirFoto2";
 const url3 = "http://localhost:9000/guardarFotos";
+const url4 = "http://localhost:9000/detectaretiquetas";
+const na = "http://localhost:9000/newAlbum";
 const cookies = new Cookies();
 let enBase64 = '';
 let imagen = user;
@@ -21,34 +23,18 @@ export default class SubirFoto extends Component{
         userName: '',
         imagenBase64: '',
         nombreImagen: '',
+        descripcion: '',
         album:'',
+        tags: [],
         albumes: [],
         agregarA:{
             seleccionado: '',
         }
     }
 
-    /*Filtar(alb){
-        var filtrado = alb.map((p,i)=>{
-            //return {p.titulo};
-            if(p.idUser == this.state.userName){
-                var algo = [];
-                algo.push(p.id);
-                algo.push(p.titulo);
-                filtr.push(algo);
-            }
-        });
-        console.log(filtr);
-    //    for (var i = 0; i < filtr.length; i++) {
-      //      n += i;
-        //    mifuncion(n);
-        // }
-        console.log(JSON.stringify(filtr));
-    }*/
-
     Comprobacion(){
-        if(this.state.userName != '' && this.state.nombreImagen != ''  && this.state.imagenBase64 != '' && this.state.agregarA.seleccionado != '' && ext != ''){
-            this.GuardarFoto();
+        if(this.state.userName != '' && this.state.nombreImagen != ''  && this.state.imagenBase64 != '' && ext != '' && this.state.descripcion != ''){
+            this.ObtenerTags();
         }else{
             swal({
                 title: "Error",
@@ -84,31 +70,73 @@ export default class SubirFoto extends Component{
             window.location.href='./';
         }
         this.state.userName = cookies.get("userName");
-        console.log('usuario' + this.state.userName);
+        console.log('usuario: ' + this.state.userName);
         this.RecuperarAlbumes();
-        /*request
-            .get(url, {idUser: this.state.userName})//'http://localhost:9000/todos')
-            .end((err, res) => {
-                console.log(JSON.parse(res.text))
-                //Revisar el json, que atributo tiene el array
-                const personasU = (JSON.parse(res.text)).Items;
-                console.log(personasU);
-                this.setState({
-                    albumes: personasU
-                });
-                //this.Filtar(personasU);
-            });*/
     }
 
-    GuardarFoto=async()=>{
+    ObtenerTags=async()=>{
+        axios.post(url4,{imagen: this.state.imagenBase64})
+        .then(response=>{
+            console.log(response.data)
+            this.state.tags = response.data.Labels;
+            console.log(this.state.tags)
+            this.RecorrerTags();
+        })
+        .catch(error=>{
+            console.error("error tags "+ error)
+        })
+        
+    }
+
+    RecorrerTags(){
+        //guardar en los primeros 5 tags
+        let limit = 6;
+        if (this.state.tags.length < 5){
+            limit = this.state.tags.length;
+        }
+        for (var i = 0; i < limit; i++) {
+            //this.GuardarFoto(this.state.tags[i]);
+            let tag = this.state.tags[i].Name;
+            console.log(tag);
+            //console.log(this.state.tags[i].Name);
+            this.CrearAlbum(tag);
+            this.GuardarFoto(tag);
+        }
+    }
+
+    CrearAlbum=async(tag)=>{
+        let nuevo = tag;
+        let existe = "no";
+        for(let i = 0; i < this.state.albumes.length; i++){
+            let v = this.state.albumes[i].titulo;
+            if(v == nuevo){
+                existe = "si";
+                break;
+            }
+        }
+
+        if("no" == existe){
+            axios.post(na,{userName: cookies.get("userName"), titulo: tag})
+            .then(response=>{
+                console.log("album creado")
+            })
+            .catch(error=>{
+                console.error(error);
+            });
+        }else{
+            console.log("el album ya existe")
+        }
+    }
+
+    GuardarFoto=async(tag)=>{
         console.log('guardar foto');
-        axios.post(url2, {nombreImagen: this.state.nombreImagen, imagenBase64: this.state.imagenBase64, extension: ext, userName: this.state.userName, album: this.state.agregarA.seleccionado})
+        axios.post(url2, {nombreImagen: this.state.nombreImagen, imagenBase64: this.state.imagenBase64, extension: ext, userName: this.state.userName, album: tag})
         .then(response=>{
             console.log('response.data');
             console.log(response.data);
             if (response.data == "correcto"){
                 console.log('foto guardada');
-                this.GuardarFotoenBD();
+                this.GuardarFotoenBD(tag);
             }else{
                 console.log('error al guardar la foto');
             }
@@ -118,12 +146,13 @@ export default class SubirFoto extends Component{
         })
     }
 
-    GuardarFotoenBD=async()=>{
+    GuardarFotoenBD=async(tag)=>{
         console.log('guardar foto en tabla');
-        axios.post(url3, {idFoto: this.state.userName + '_' + this.state.agregarA.seleccionado + '_' + this.state.nombreImagen, userName: this.state.userName, album: this.state.agregarA.seleccionado, nombreI: this.state.nombreImagen, ubicacion: 'Fotos_Publicadas/' + this.state.userName + '_' + this.state.agregarA.seleccionado + '_' + this.state.nombreImagen + '.' + ext})
+        axios.post(url3, {idFoto: this.state.userName + '_' + tag + '_' + this.state.nombreImagen, userName: this.state.userName, album: tag, nombreI: this.state.nombreImagen, ubicacion: 'Fotos_Publicadas/' + this.state.userName + '_' + tag + '_' + this.state.nombreImagen + '.' + ext, descripcion: this.state.descripcion})
         .then(response=>{
             if(response.data == "success"){
-                console.log('foto guardada en la tabla');swal({
+                console.log('foto guardada en la tabla');
+                swal({
                     title: "Exitoso",
                     text: "Foto guardada",
                     icon: "success",
@@ -192,13 +221,8 @@ export default class SubirFoto extends Component{
                             <input onChange={e => this.setState({nombreImagen: e.target.value})} type="text" className="form-control" id="nombreImg" placeholder="Nombre de imagen" />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="alb" className="form-label">Album</label>
-                            
-                            
-                            <select className="form-control btn-info" id="seleccionado" name="seleccionado" onChange={this.handleChange}>
-                                        <option>Album</option>
-                                        {datos2}
-                            </select>
+                            <label htmlFor="des" className="form-label">Descripcion</label>
+                            <input onChange={e => this.setState({descripcion: e.target.value})} type="text" className="form-control" id="desc" placeholder="Descripcion de la imagen" />                          
                         </div>
                         <button type="submit" className="btn btn-dark">Subir</button>
                         </form>

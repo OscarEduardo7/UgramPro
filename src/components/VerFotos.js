@@ -5,6 +5,7 @@ import user from '../img/user.png';
 import { RViewer, RViewerTrigger } from 'react-viewerjs';
 import {Card} from 'react-bootstrap'
 import '../css/verFotos.css'
+import { Imagen } from './Imagen';
 
 const urlAlbumes = "http://localhost:9000/albumes2";
 const urlFotosPerfil = "http://localhost:9000/fotosPerfilUsuario";
@@ -177,10 +178,7 @@ export default class VerFotos extends Component{
                 <div className="text-center divo">
                 {g.map((u,j)=>{
                     return(
-                        <figure className="figure tam">
-                            <img src={u} className="rou"/>
-                        <figcaption className="figure-caption text-end">Foto</figcaption>
-                        </figure>
+                        <Imagen ubicacion={u}/>
                     )
                 })}
                 </div>
@@ -213,7 +211,13 @@ export default class VerFotos extends Component{
                             return(
                                 <RViewerTrigger index={i + j}>
                                     <div className="user-img-def">
+
+                                    <a title="Detalle" onChange={this.handleChange(u)} href="./Foto">
+
                                             <img src={u} style={{width: '150px', height: '150px', marginLeft: '20px', border: '2px solid black'}}/>
+                                            
+                                            </a>
+                                            
                                             </div>
                                 </RViewerTrigger>
                             )
@@ -223,5 +227,10 @@ export default class VerFotos extends Component{
             </div>
         </div>    
         )
+    }
+
+
+    handleChange(ubicacion){
+        cookies.set('ubicacion', ubicacion, {path: "/"});
     }
 }
