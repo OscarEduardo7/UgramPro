@@ -48,6 +48,9 @@ export default class MenuPrincipal extends Component {
             <a className="dropdown-item" href="./upload">
                 Subir fotos
             </a>
+            <a className="dropdown-item" href="./chatbot">
+                Asistencia
+            </a>
             <a className="dropdown-item" href="#" onClick={()=>this.CerrarSesion()}>
                 Cerrar Sesion
             </a>
