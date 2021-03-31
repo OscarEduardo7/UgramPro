@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import '../css/Register.css'
 import MenuPrincipal from '../components/MenuPrincipal';
-import VerFotos from '../components/VerFotos';
+import DetalleFoto from '../components/DetalleFoto';
 
-export default class Fotos extends Component {
+export default class Foto extends Component {
 
     render() {
         return (
             <>
             <MenuPrincipal />
-            <VerFotos />
+            <DetalleFoto />
             </>
         )
     }

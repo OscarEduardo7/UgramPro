@@ -60,3 +60,11 @@ input#Photo{
     background-color: #5bc0de;
     border-color: #46b8da;
 }
+
+
+.descr {
+    color: #fff;
+    border-color: #46b8da;
+    width:250px;
+    height:200px;
+    border: 2px solid #990000;}
