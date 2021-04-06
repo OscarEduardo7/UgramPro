@@ -40,10 +40,29 @@ Es un servicio para construir interefaces de conversación en cualquier aplicaci
 
 Con esta herramienta se creo un chat bot el cual asiste al cliente que utilice la pagina web.
 
+### *Funciones implementadas en el chatbot:*
+
+1. **Bienvenid@:** Al agregar un saludo al chat, este le dara la bienvenida a la plataforma.
+
+2. **Una cita con los desarrolladores:** Se implemento el poder concretar una cita con los desarrolladores por si les interesa algun trabajo relacionado a el software que ellos ven.
+    
+3. **Preguntas:** Se implemento el poder realizar ciertas preguntas relacionas a la pagina, estas pueden ser de como subir una foto o bien como activar la camara para el reconocimiento de inicio de sesion.
+
+4. **Dejar una recomendación:** Se implemento el poder hacer recomendaciones acerca de la pagina, o bien si se encuentra algun error en esta.
+
 ### **Amazon Rekognition**
 Una herramienta creada para detectar diferentes propiedades en imagenes.
 
 Con esta herramienta reconocemos si el usuario es el mismo que esta intentando iniciar sesión, su estado de animo y otras caracteriticas como edad etc.
+
+### *Funciones:*
+
+1. **Comparar rostro:** Con esta funcion detectamos si el usuario el cual quiere ingresar a la plataforma es la misma persona quien creo la cuenta. Tiene que existir un parecido de 90%.
+
+2. **Detectar etiquetas:** Con esta funcion detectamos las diferentes caracteristicas que tenga la foto de perfil del usuario. Indicando  la edad, si utiliza lentes, hasta su genero.
+  De igual manera las fotos que se suben a la plataforma son examinadas y estas se suben a un album especifico el cual es el resultado de la consulta con rekognition.
+
+3. **Extraer texto:** Con esta funcion se puede obtener el texto de alguna imagen.
 
 ### **Amazon Translate**
 Herramienta utilizada para traducir el texto que contenta alguna imagen de las cuales se suben a nuestros albumes.
