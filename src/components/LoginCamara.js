@@ -7,10 +7,10 @@ import cama from '../img/lente.png';
 
 const WebcamComponent = () => <Webcam />;
 
-const Surl ="http://localhost:9000/login2";
-const urlUsuario = "http://localhost:9000/usuarioId";
-const urlFoto = "http://localhost:9000/obtenerFoto";
-const compFoto = "http://localhost:9000/compareFace";
+const Surl ="http://18.191.164.43:9000/login2";
+const urlUsuario = "http://18.191.164.43:9000/usuarioId";
+const urlFoto = "http://18.191.164.43:9000/obtenerFoto";
+const compFoto = "http://18.191.164.43:9000/compareFace";
 
 const cookiess = new Cookies();
 

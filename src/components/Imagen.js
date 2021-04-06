@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import axios from 'axios';
 
-const translate = "http://localhost:9000/translate";
+const translate = "http://18.191.164.43:9000/translate";
 
 export const Imagen = (props) => {
     const [modal, setModal] = useState(false);
@@ -54,12 +54,13 @@ export const Imagen = (props) => {
 
     return (
         <div>
-            <figure className="figure tam">            
+            <figure className="figure tam">          
                 <a title="Detalle" href="./Foto">
                     <img src={props.ubicacion} className="rou"/>
                 </a>
-                <button onClick={modalImagen}>Descripcion</button>
-            <figcaption className="figure-caption text-end">Foto</figcaption>
+                <br></br>
+                <button className="btn btn-info" onClick={modalImagen}>Expandir</button>
+            <figcaption className="figure-caption text-end"></figcaption>
             </figure>
 
             <Modal isOpen={modal}>

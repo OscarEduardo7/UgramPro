@@ -5,10 +5,10 @@ import md5 from 'md5';
 import user from '../img/user.png';
 import swal from 'sweetalert';
 
-const url = "http://localhost:9000/register";
-const url2 = "http://localhost:9000/todos2";
-const url3 = "http://localhost:9000/subirFoto";
-const url4 = "http://localhost:9000/guardarFotoPerfil";
+const url = "http://18.191.164.43:9000/register";
+const url2 = "http://18.191.164.43:9000/todos2";
+const url3 = "http://18.191.164.43:9000/subirFoto";
+const url4 = "http://18.191.164.43:9000/guardarFotoPerfil";
 const cookies = new Cookies();
 let enBase64 = '';
 let imagen = user;

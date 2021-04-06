@@ -11,17 +11,17 @@ import { timers } from 'jquery';
 import user from '../img/user.png';
 
 const cookiess = new Cookies();
-const Surl = "http://localhost:9000/editarUsuario";
-const Aurl = "http://localhost:9000/getAlbumes";
-const Curl = "http://localhost:9000/newAlbum";
-const Eurl = "http://localhost:9000/deleteAlbum";
-const urlUsuario = "http://localhost:9000/usuarioId";
-const urlFoto = "http://localhost:9000/obtenerFoto";
-const url3 = "http://localhost:9000/subirFoto";
-const url4 = "http://localhost:9000/guardarFotoPerfil";
+const Surl = "http://18.191.164.43:9000/editarUsuario";
+const Aurl = "http://18.191.164.43:9000/getAlbumes";
+const Curl = "http://18.191.164.43:9000/newAlbum";
+const Eurl = "http://18.191.164.43:9000/deleteAlbum";
+const urlUsuario = "http://18.191.164.43:9000/usuarioId";
+const urlFoto = "http://18.191.164.43:9000/obtenerFoto";
+const url3 = "http://18.191.164.43:9000/subirFoto";
+const url4 = "http://18.191.164.43:9000/guardarFotoPerfil";
 
-const tagsP = "http://localhost:9000/tagsProfile";
-const textG = "http://localhost:9000/getTexto";
+const tagsP = "http://18.191.164.43:9000/tagsProfile";
+const textG = "http://18.191.164.43:9000/getTexto";
 
 
 let enBase64 = '';
@@ -489,6 +489,9 @@ export default class Profile extends Component {
                     <div className="row justify-content-md-center">
                         <div className="col-lg-3">
                         <button type="sumit" className="btn btn-info btn-lg btni" onClick={()=>{window.location.href='./fotos';}}>Ver fotos</button>
+                        </div>
+                        <div className="col-md-auto">
+                        <button type="sumit" className="btn btn-info btn-lg btni" onClick={()=>{window.location.href='./Foto';}}>Traducir</button>
                         </div>
                         <div className="col-md-auto">
                         <button type="button" className="btn btn-info btn-lg btni" onClick={()=>this.modaEditarEstado()}>Editar Perfil</button>

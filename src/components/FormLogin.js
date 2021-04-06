@@ -6,7 +6,7 @@ import md5 from 'md5';
 import Cookies from 'universal-cookie';
 import swal from 'sweetalert';
 
-const Surl ="http://localhost:9000/login2";
+const Surl ="http://18.191.164.43:9000/login2";
 const cookiess = new Cookies();
 
 export default class FormLogin extends Component {

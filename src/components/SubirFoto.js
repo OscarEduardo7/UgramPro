@@ -6,11 +6,11 @@ import md5 from 'md5';
 import user from '../img/user.png';
 import swal from 'sweetalert';
 
-const url = "http://localhost:9000/albumes2";
-const url2 = "http://localhost:9000/subirFoto2";
-const url3 = "http://localhost:9000/guardarFotos";
-const url4 = "http://localhost:9000/detectaretiquetas";
-const na = "http://localhost:9000/newAlbum";
+const url = "http://18.191.164.43:9000/albumes2";
+const url2 = "http://18.191.164.43:9000/subirFoto2";
+const url3 = "http://18.191.164.43:9000/guardarFotos";
+const url4 = "http://18.191.164.43:9000/detectaretiquetas";
+const na = "http://18.191.164.43:9000/newAlbum";
 const cookies = new Cookies();
 let enBase64 = '';
 let imagen = user;

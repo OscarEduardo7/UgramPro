@@ -6,10 +6,10 @@ import axios from 'axios';
 import user from '../img/lente.png';
 let imagen = user;
 
-const translate = "http://localhost:9000/translate";
-const urlFoto = "http://localhost:9000/foto";
-const urlAlbumes = "http://localhost:9000/albumes2";
-const urlPublicadas = "http://localhost:9000/fotosPublicadasUsuario";
+const translate = "http://18.191.164.43:9000/translate";
+const urlFoto = "http://18.191.164.43:9000/foto";
+const urlAlbumes = "http://18.191.164.43:9000/albumes2";
+const urlPublicadas = "http://18.191.164.43:9000/fotosPublicadasUsuario";
 
 const cookies = new Cookies();
 

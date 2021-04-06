@@ -7,11 +7,11 @@ import {Card} from 'react-bootstrap'
 import '../css/verFotos.css'
 import { Imagen } from './Imagen';
 
-const urlAlbumes = "http://localhost:9000/albumes2";
-const urlFotosPerfil = "http://localhost:9000/fotosPerfilUsuario";
-const urlPublicadas = "http://localhost:9000/fotosPublicadasUsuario";
-const urlUsuario = "http://localhost:9000/usuarioId";
-const urlFoto = "http://localhost:9000/obtenerFoto";
+const urlAlbumes = "http://18.191.164.43:9000/albumes2";
+const urlFotosPerfil = "http://18.191.164.43:9000/fotosPerfilUsuario";
+const urlPublicadas = "http://18.191.164.43:9000/fotosPublicadasUsuario";
+const urlUsuario = "http://18.191.164.43:9000/usuarioId";
+const urlFoto = "http://18.191.164.43:9000/obtenerFoto";
 
 const cookies = new Cookies();
 
