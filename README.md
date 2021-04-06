@@ -2,7 +2,7 @@
 
 # Practica1_Grupo25
 
-## [Ugram - Practica 1](http://practica1-g25-paginaweb.s3-website.us-east-2.amazonaws.com/)
+## [Ugram - Practica 1](http://g25-p2.s3-website-us-east-1.amazonaws.com/)
 
 - - -
 
@@ -75,9 +75,6 @@ Los siguientes usuarios de **IAM** fueron utilizados para obtener los servicios 
 * Segurity Groups asociados:
   <img src="imagenesDocu\segurity.png" border="2" align="center"/>
 
-* Balanceador de carga:
-  <img src="imagenesDocu\balancer.PNG" border="2" align="center"/>
-
 ### Capturas **DynamoDB**
 
 * Tablas utilizadas:
@@ -100,7 +97,7 @@ Los siguientes usuarios de **IAM** fueron utilizados para obtener los servicios 
 
 - - -
 
-<img src="imagenesDocu\subirfoto.PNG" border="2" align="center"/>
+<img src="imagenesDocu\subirfoto2.PNG" border="2" align="center"/>
 
 - - -
 
@@ -108,11 +105,15 @@ Los siguientes usuarios de **IAM** fueron utilizados para obtener los servicios 
 
 - - -
 
-<img src="imagenesDocu\albumes.PNG" border="2" align="center"/>
+<img src="imagenesDocu\fotos.PNG" border="2" align="center"/>
 
 - - -
 
-<img src="imagenesDocu\fotos.PNG" border="2" align="center"/>
+<img src="imagenesDocu\detalle.PNG" border="2" align="center"/>
+
+- - -
+
+<img src="imagenesDocu\foto.PNG" border="2" align="center"/>
 
 - - -
 - - -
