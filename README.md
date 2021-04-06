@@ -2,7 +2,7 @@
 
 # Practica1_Grupo25
 
-## [Ugram - Practica 1](http://g25-p2.s3-website-us-east-1.amazonaws.com/)
+## [Ugram Pro - Practica 2](http://g25-p2.s3-website-us-east-1.amazonaws.com/)
 
 - - -
 
@@ -13,14 +13,12 @@
 - - -
 
 ## Descripción de arquitectura:
-Para el desarrollo de **Ugram** se implementó una arquitectura server con AWS.
+Para el desarrollo de **Ugram Pro** se implementó una arquitectura server con AWS.
 
-<img src="imagenesDocu\Arquitectura.PNG" border="2" align="center"/>
+<img src="imagenesDocu\arquitectura2.PNG" border="2" align="center"/>
   
 ### **Amazon EC2**
-Es el servicio web, con el cual se crearon las instancias de maquinas virtuales, las cuales contienen los servidores **Node Js** y **Flask Python**.
-
-Ademas de proveer el servicio **Elastic Load Balancing**, con el cual se creo el balanceador de carga para los dos servidores.
+Es el servicio web, con el cual se creo la instancia de una maquina virtual, la cual contiene el servidor de **Node Js**.
 
 
 ### **DynamoDB**
@@ -37,6 +35,19 @@ Buckets de almacenamiento de tipo objetos, en cual se encarga de almacenar las f
 
 Este mismo servicio se utilizo para almacenar la pagina web, la cual posteriormente se despliega en el DNS que provee el servicio.
 
+### **Amazon Lex**
+Es un servicio para construir interefaces de conversación en cualquier aplicación que use voz y texto.
+
+Con esta herramienta se creo un chat bot el cual asiste al cliente que utilice la pagina web.
+
+### **Amazon Rekognition**
+Una herramienta creada para detectar diferentes propiedades en imagenes.
+
+Con esta herramienta reconocemos si el usuario es el mismo que esta intentando iniciar sesión, su estado de animo y otras caracteriticas como edad etc.
+
+### **Amazon Translate**
+Herramienta utilizada para traducir el texto que contenta alguna imagen de las cuales se suben a nuestros albumes.
+
 - - -
 ## Usuarios IAM utilizados
 Los siguientes usuarios de **IAM** fueron utilizados para obtener los servicios de AWS.
@@ -49,9 +60,17 @@ Los siguientes usuarios de **IAM** fueron utilizados para obtener los servicios 
    * Politicas de permisos Asociadas:
      *  AmazonS3FullAccess.
 
-3. Usuario **EC2**
+3. Usuario **Lex**
    * Politicas de permisos Asociadas:
-     *  AmazonEC2FullAccess.
+     *  AmazonLexFullAccess.
+
+4. Usuario **Rekognition**
+   * Politicas de permisos Asociadas:
+     *  AmazonRekognitionFullAccess.
+
+5. Usuario **Translate**
+   * Politicas de permisos Asociadas:
+     *  AmazonTranslateFullAccess.
 
 ---
 ## Capturas de pantalla:
@@ -88,12 +107,23 @@ Los siguientes usuarios de **IAM** fueron utilizados para obtener los servicios 
 <img src="imagenesDocu\login.PNG" border="2" align="center"/>
 
 - - -
+<img src="imagenesDocu\camara.PNG" border="2" align="center"/>
+
+- - -
 
 <img src="imagenesDocu\registro.PNG" border="2" align="center"/>
 
 - - -
 
-<img src="imagenesDocu\perfil.png" border="2" align="center"/>
+<img src="imagenesDocu\perfil1.png" border="2" align="center"/>
+
+- - -
+<img src="imagenesDocu\extraer.PNG" border="2" align="center"/>
+
+- - -
+<img src="imagenesDocu\chat.PNG" border="2" align="center"/>
+- - -
+<img src="imagenesDocu\chat3.PNG" border="2" align="center"/>
 
 - - -
 
